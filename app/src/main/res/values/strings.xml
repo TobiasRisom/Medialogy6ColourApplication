@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Medialogy6ColourApplication</string>
+    <string name="differentio">Differentio</string>
+    <string name="ninjas" />
+    <string name="pirates" />
+    <string name="ninja">ninja</string>
+    <string name="pirate">pirate</string>
+    <string name="Yes">Yes</string>
+    <string name="No">No</string>
+</resources>
