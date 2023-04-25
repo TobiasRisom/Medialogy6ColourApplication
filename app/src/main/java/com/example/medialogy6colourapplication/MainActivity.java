@@ -34,8 +34,9 @@ public class MainActivity extends AppCompatActivity {
     float[] areaBuffer = {0f, 0.013f, 0.025f, 0.038f, 0.05f};
     int[] areaCheckOrder = shuffledArray(new int[] {0,1,2,3,4});
     int[] areaBufferCheck = {0,0,0,0,0};
-    float x_start = 0.3f;
-    float y_start = 0.3f;
+    float x_start;
+    float y_start;
+    float Y_start;
     int currentAngle = 0;
     float highValue = 0f;
     float lowValue = 0f;
@@ -63,6 +64,13 @@ public class MainActivity extends AppCompatActivity {
         progressBar.setProgress(0);
 
         clearData();
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            float[] Yxy = extras.getFloatArray("values");
+            Y_start = Yxy[0];
+            x_start = Yxy[1];
+            y_start = Yxy[2];
+        }
         float[] startingPoint = angleToCoordinates(x_start, y_start, 0, currentAngle);
         int[] startingPointRGB = YxyTosRGB(0.2f, startingPoint[0], startingPoint[1]);
         currentRGB = new int[]{startingPointRGB[0], startingPointRGB[1], startingPointRGB[2]};

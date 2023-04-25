@@ -12,10 +12,10 @@
         android:theme="@style/Theme.Medialogy6ColourApplication"
         tools:targetApi="31">
         <activity
-            android:name=".ColorSelect"
+            android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ColorSelect"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
