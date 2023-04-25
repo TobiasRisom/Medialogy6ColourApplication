@@ -1,107 +1,315 @@
 package com.example.medialogy6colourapplication;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Define the object for Radio Group,
-    // Submit and Clear buttons
-    private RadioGroup radioGroup;
-    Button submit, clear;
+    // button1 = Yes
+    // button2 = No
+    // button3 = Unsure
+    Button button1, button2, button3;
+    ProgressBar progressBar;
     View circle1, circle2;
-
-    float[] buffers = {0.1f, 0.001f, 0.05f, 0.002f, 0.05f, 0.005f, 0.03f, 0.007f, 0.02f, 0.01f, 0.015f};
+    int[] currentRGB;
+    Boolean areaCheck = true;
+    float[] areaBuffer = {0f, 0.013f, 0.025f, 0.038f, 0.05f};
+    int[] areaCheckOrder = shuffledArray(new int[] {0,1,2,3,4});
+    int[] areaBufferCheck = {0,0,0,0,0};
+    float x_start = 0.3f;
+    float y_start = 0.3f;
+    int currentAngle = 0;
+    float highValue = 0f;
+    float lowValue = 0f;
+    float precisionTestValue;
     int index = 0;
+    boolean split = true;
+    boolean isLowValue = true;
+    Random rand;
+
+    // Create the txt file for storing data
+    private static final String FILE_NAME = "some_data.txt";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
+        // Lock screen orientation to portrait mode
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         // Bind the components to their respective object by assigning their IDs with the help of findViewById() method
-        submit = (Button)findViewById(R.id.submit);
-        radioGroup = (RadioGroup)findViewById(R.id.groupradio);
+        button1 = findViewById(R.id.button);
+        button2 = findViewById(R.id.button2);
+        button3 = findViewById(R.id.button3);
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setProgress(0);
 
-        // Find circle2 and change its color
-        circle2 = (View)findViewById(R.id.circle2);
-        Drawable background = circle2.getBackground();
-        background.setColorFilter(Color.parseColor("#440033"), PorterDuff.Mode.SRC_IN);
+        clearData();
+        float[] startingPoint = angleToCoordinates(x_start, y_start, 0, currentAngle);
+        int[] startingPointRGB = YxyTosRGB(0.2f, startingPoint[0], startingPoint[1]);
+        currentRGB = new int[]{startingPointRGB[0], startingPointRGB[1], startingPointRGB[2]};
+        setColor(currentRGB[0], currentRGB[1], currentRGB[2], currentRGB[0], currentRGB[1], currentRGB[2]);
 
-        // Uncheck or reset the radio buttons initially
-        radioGroup.clearCheck();
-
-        // Add the Listener to the RadioGroup
-        radioGroup.setOnCheckedChangeListener(
-                new RadioGroup
-                        .OnCheckedChangeListener() {
-                    @Override
-
-                    // The flow will come here when
-                    // any of the radio buttons in the radioGroup
-                    // has been clicked
-
-                    // Check which radio button has been clicked
-                    public void onCheckedChanged(RadioGroup group,
-                                                 int checkedId)
-                    {
-
-                        // Get the selected Radio Button
-                        RadioButton
-                                radioButton
-                                = (RadioButton)group
-                                .findViewById(checkedId);
-                    }
-                });
-
-        int[] testColors = YxyTosRGB(0.2f, 0.3f,0.3f + buffers[0]);
-        setColor(50, 51, 60, testColors[0], testColors[1], testColors[2]);
+        float[] coordinates = angleToCoordinates(x_start, y_start, areaBuffer[areaCheckOrder[0]], currentAngle);
+        int[] testColors = YxyTosRGB(0.2f, coordinates[0], coordinates[1]);
+        setColor(testColors[0], testColors[1], testColors[2]);
 
         // Add the Listener to the Submit Button
-        submit.setOnClickListener(new View.OnClickListener() {
+        button1.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v)
             {
+                main(true);
+            }
+        });
 
-                // When submit button is clicked,
-                // Ge the Radio Button which is set
-                // If no Radio Button is set, -1 will be returned
-                int selectedId = radioGroup.getCheckedRadioButtonId();
+        button2.setOnClickListener(new View.OnClickListener() {
 
-                if (selectedId == -1)
+            @Override
+            public void onClick(View v)
+            {
+                main(false);
+            }
+        });
+
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                main(true);
+            }
+        });
+    }
+
+    void main(boolean yesButton)
+    {
+        // AREA NARROW
+        if (areaCheck == true)
+        {
+            if(yesButton)
+            {
+                areaBufferCheck[areaCheckOrder[index]] = 1;
+            }
+            else if(!yesButton)
+            {
+                areaBufferCheck[areaCheckOrder[index]] = 0;
+            }
+            index++;
+            if(index >= areaBuffer.length)
+            {
+                index = 0;
+
+                // If the area is valid, we should have an area narrowed down. The next test is the halfway point in this area.
+                if(validArea() == true)
                 {
-                    Toast.makeText(MainActivity.this, "No answer has been selected", Toast.LENGTH_SHORT).show();
+                    split = true;
+                    narrowArea();
+                    areaCheck = false;
+                    System.out.println("Valid area found!");
+                    System.out.println("Value is between: " + lowValue + " and " + highValue);
+                    precisionTestValue = roundToDecimal(highValue -((highValue - lowValue) / 2f), 3);
+                    float[] coordinates = angleToCoordinates(x_start, y_start, precisionTestValue, currentAngle);
+                    int[] testColors = YxyTosRGB(0.2f, coordinates[0], coordinates[1]);
+                    setColor(testColors[0], testColors[1], testColors[2]);
+                    System.out.println("Currently testing: " + precisionTestValue);
                 }
-
                 else
-
                 {
-
-                    RadioButton radioButton = (RadioButton)radioGroup.findViewById(selectedId);
-
-                    // Now display the value of selected item
-                    // by the Toast message
-                    Toast.makeText(MainActivity.this, radioButton.getText(), Toast.LENGTH_SHORT).show();
-                    index++;
-                    if(index >= buffers.length)
+                    progressBar.setProgress(0);
+                    // Reset the test on invalid data (e.g. "[0,0,1,0,1]" or "[1,1,1,1,1]")
+                    System.out.println("Answer not valid. Restarting...");
+                    for(int i = 0; i < areaBufferCheck.length; i++)
                     {
-                        index = 0;
+                        areaBufferCheck[i] = 0;
                     }
-                    int[] testColors = YxyTosRGB(0.2f, 0.3f,0.3f + buffers[index]);
+                    float[] coordinates = angleToCoordinates(x_start, y_start, areaBuffer[areaCheckOrder[index]], currentAngle);
+                    int[] testColors = YxyTosRGB(0.2f, coordinates[0], coordinates[1]);
                     setColor(testColors[0], testColors[1], testColors[2]);
                 }
             }
-        });
+            else
+            {
+                progressBar.incrementProgressBy(10);
+                System.out.println("progress: " + progressBar.getProgress());
+                float[] coordinates = angleToCoordinates(x_start, y_start, areaBuffer[areaCheckOrder[index]], currentAngle);
+                int[] testColors = YxyTosRGB(0.2f, coordinates[0], coordinates[1]);
+                setColor(testColors[0], testColors[1], testColors[2]);
+                System.out.println("Currently testing: " + areaBuffer[areaCheckOrder[index]]);
+                System.out.println("Current threshold values: " + areaBufferCheck[0] + ", " + areaBufferCheck[1] + ", " + areaBufferCheck[2] + ", " + areaBufferCheck[3] + ", " + areaBufferCheck[4] + ", ");
+            }
+        }
+
+        // FIND THRESHOLD
+        else if(areaCheck == false)
+        {
+
+            // First test splits the area in half. This narrows down the test field a bit.
+            if (split == true)
+            {
+                progressBar.setProgress(75);
+                if(yesButton)
+                {
+                    lowValue = precisionTestValue + 0.001f;
+                    highValue -= 0.001f;
+                }
+                else if(!yesButton)
+                {
+                    highValue = precisionTestValue - 0.001f;
+                    lowValue += 0.001f;
+                }
+
+                System.out.println("High value: " + highValue + " Low value: " + lowValue);
+                System.out.println("Currently testing: " + lowValue);
+                float[] coordinates = angleToCoordinates(x_start, y_start, lowValue, currentAngle);
+                int[] testColors = YxyTosRGB(0.2f, coordinates[0], coordinates[1]);
+                setColor(testColors[0], testColors[1], testColors[2]);
+                split = false;
+            }
+
+            // Starts on the lowValue now with one split having been done (example: low = 0.05, high = 0.063)
+            // Now the test bounces back and forth until a precise value has been located
+            else
+            {
+                if(highValue <= lowValue)
+                {
+                    Toast.makeText(MainActivity.this, "ERROR: ANSWER INVALID", Toast.LENGTH_SHORT).show();
+                    System.out.println("ERROR: INVALID ANSWER");
+                    areaCheckOrder = shuffledArray(new int[] {0,1,2,3,4});
+                    nextAngle();
+                    progressBar.setProgress(0);
+                }
+
+                if(yesButton)
+                {
+                    // User says the low value is the same - test is narrowed further
+                    if(isLowValue == true)
+                    {
+                        progressBar.incrementProgressBy((100 - progressBar.getProgress()) / 2);
+                        lowValue = roundToDecimal(lowValue += 0.001f, 3);
+                        isLowValue = false;
+                        float[] coordinates = angleToCoordinates(x_start, y_start, highValue, currentAngle);
+                        int[] testColors = YxyTosRGB(0.2f, coordinates[0], coordinates[1]);
+                        setColor(testColors[0], testColors[1], testColors[2]);
+
+                        System.out.println("High value: " + highValue + " Low value: " + lowValue);
+                        System.out.println("Currently testing: " + highValue);
+                    }
+
+                    // User says the high value is the same - this must be the highest possible matching color.
+                    else if(isLowValue == false)
+                    {
+                        progressBar.setProgress(100);
+                        System.out.println("COLOR THRESHOLD FOUND!");
+                        System.out.println("MacAdam Point: " + highValue);
+                        areaCheckOrder = shuffledArray(new int[] {0,1,2,3,4});
+                        saveData(highValue);
+                        nextAngle(highValue);
+                        progressBar.setProgress(0);
+                    }
+                }
+                else if(!yesButton) {
+
+                    // User says the high value is different - test is narrowed further
+                    if (isLowValue == false) {
+                        progressBar.incrementProgressBy((100 - progressBar.getProgress()) / 2);
+                        highValue = roundToDecimal(highValue -= 0.001f, 3);
+                        isLowValue = true;
+                        float[] coordinates = angleToCoordinates(x_start, y_start, lowValue, currentAngle);
+                        int[] testColors = YxyTosRGB(0.2f, coordinates[0], coordinates[1]);
+                        setColor(testColors[0], testColors[1], testColors[2]);
+
+                        System.out.println("High value: " + highValue + " Low value: " + lowValue);
+                        System.out.println("Currently testing: " + lowValue);
+                    }
+                    // User says the low value is different - this must be the value 1 step above the highest possible matching color.
+                    else if(isLowValue == true)
+                    {
+                        progressBar.setProgress(100);
+                        System.out.println("COLOR THRESHOLD FOUND!");
+                        System.out.println("MacAdam Point: " + (lowValue - 0.001f));
+                        areaCheckOrder = shuffledArray(new int[] {0,1,2,3,4});
+                        saveData(lowValue - 0.001f);
+                        nextAngle(lowValue - 0.001f);
+                        progressBar.setProgress(0);
+                    }
+                }
+            }
+        }
+
+    }
+    Boolean validArea()
+    {
+        if(areaBufferCheck[0] == 0 || areaBufferCheck[4] == 1)
+        {
+            System.out.println("Answer invalid - first or last value was invalid.");
+            return false;
+        }
+        else
+        {
+            for(int i = 0; i < areaBufferCheck.length; i++)
+            {
+                if(areaBufferCheck[i] == 0)
+                {
+                    int division = i;
+                    for(int j = 0; j < areaBufferCheck.length; j++)
+                    {
+                        if(areaBufferCheck[j] == 0 && j < division)
+                        {
+                            System.out.println("Invalid - smaller value than division was 0");
+                            return false;
+                        }
+                        else if(areaBufferCheck[j] == 1 && j > division)
+                        {
+                            System.out.println("Invalid - larger value than division was 1");
+                            return false;
+                        }
+                    }
+                    System.out.println("Answer valid!");
+                    return true;
+                }
+                else if (areaBufferCheck[i] == 1)
+                {
+                    continue;
+                }
+            }
+            System.out.println("Answer invalid - for loop resulted in no return");
+            return false;
+        }
+    }
+    void narrowArea()
+    {
+        for(int i = 0; i < areaBufferCheck.length; i++)
+        {
+            if (areaBufferCheck[i] == 0)
+            {
+                highValue = areaBuffer[i];
+                lowValue = areaBuffer[i-1];
+                break;
+            }
+            else
+            {
+                continue;
+            }
+        }
     }
     int[] YxyTosRGB(float Y, float x_coordinate, float y_coordinate){
 
@@ -265,24 +473,161 @@ public class MainActivity extends AppCompatActivity {
         int scale = (int) Math.pow(10, precision);
         return (float) Math.round(number * scale) / scale;
     }
+    boolean fiftyFifty()
+    {
+        rand = new Random();
+        return Math.random() < 0.5;
+    }
+
+    int[] shuffledArray(int[] array)
+    {
+        rand = new Random();
+        for (int i = array.length - 1; i > 0; i--)
+        {
+            int index = rand.nextInt(i + 1);
+            // Simple swap
+            int a = array[index];
+            array[index] = array[i];
+            array[i] = a;
+        }
+        for (int number : array)
+        {
+            System.out.println(number);
+        }
+        return array;
+    }
 
     void setColor(int RC1, int GC1, int BC1, int RC2, int GC2, int BC2)
     {
         // Left-Most Color (TARGET COLOR)
-        circle1 = (View)findViewById(R.id.circle1);
+        circle1 = findViewById(R.id.circle1);
         Drawable background1 = circle1.getBackground();
         background1.setColorFilter((Color.rgb(RC1, GC1, BC1)), PorterDuff.Mode.SRC_IN);
 
         // Right-Most Color (COMPARISON COLOR)
-        circle2 = (View)findViewById(R.id.circle2);
+        circle2 = findViewById(R.id.circle2);
         Drawable background2 = circle2.getBackground();
         background2.setColorFilter((Color.rgb(RC2, GC2, BC2)), PorterDuff.Mode.SRC_IN);
     }
     void setColor(int RC2, int GC2, int BC2)
     {
-        // Right-Most Color (COMPARISON COLOR)
-        circle2 = (View)findViewById(R.id.circle2);
+        circle1 = findViewById(R.id.circle1);
+        Drawable background1 = circle1.getBackground();
+
+        circle2 = findViewById(R.id.circle2);
         Drawable background2 = circle2.getBackground();
-        background2.setColorFilter((Color.rgb(RC2, GC2, BC2)), PorterDuff.Mode.SRC_IN);
+
+        // Swap colors randomly
+        if(fiftyFifty() == true)
+        {
+            background1.setColorFilter((Color.rgb(currentRGB[0], currentRGB[1], currentRGB[2])), PorterDuff.Mode.SRC_IN);
+            background2.setColorFilter((Color.rgb(RC2, GC2, BC2)), PorterDuff.Mode.SRC_IN);
+            System.out.println("Left color is standard");
+        }
+        else
+        {
+            background1.setColorFilter((Color.rgb(RC2, GC2, BC2)), PorterDuff.Mode.SRC_IN);
+            background2.setColorFilter((Color.rgb(currentRGB[0], currentRGB[1], currentRGB[2])), PorterDuff.Mode.SRC_IN);
+            System.out.println("Right color is standard");
+        }
+    }
+
+    float[] angleToCoordinates(float x_start, float y_start, float radius, int angle_degrees)
+    {
+        double x = radius * Math.sin(Math.PI * 2 * angle_degrees / 360);
+        double y = radius * Math.cos(Math.PI * 2 * angle_degrees / 360);
+
+        float[] coordinates = {(float)x + x_start, (float)y + y_start};
+        System.out.println("Points coors are: " + coordinates[0] + " and " + coordinates[1]);
+
+        return coordinates;
+    }
+    void nextAngle(float ellipsePoint)
+    {
+        Toast.makeText(MainActivity.this, "THRESHOLD FOUND: " + ellipsePoint, Toast.LENGTH_SHORT).show();
+        currentAngle += 45;
+        if(currentAngle == 360)
+        {
+            currentAngle = 0;
+        }
+        areaCheck = true;
+        index = 0;
+        float[] coordinates = angleToCoordinates(x_start, y_start, areaBuffer[areaCheckOrder[0]], currentAngle);
+        int[] testColors = YxyTosRGB(0.2f, coordinates[0], coordinates[1]);
+        setColor(53, 49, 64, testColors[0], testColors[1], testColors[2]);
+        Toast.makeText(MainActivity.this, "NEXT ANGLE: " + currentAngle, Toast.LENGTH_SHORT).show();
+
+    }
+    // nextAngle without argument is ONLY used for when there is an error in the answers
+    void nextAngle()
+    {
+        currentAngle += 45;
+        if(currentAngle == 360)
+        {
+            currentAngle = 0;
+        }
+        areaCheck = true;
+        index = 0;
+        float[] coordinates = angleToCoordinates(x_start, y_start, areaBuffer[areaCheckOrder[0]], currentAngle);
+        int[] testColors = YxyTosRGB(0.2f, coordinates[0], coordinates[1]);
+        setColor(53, 49, 64, testColors[0], testColors[1], testColors[2]);
+        Toast.makeText(MainActivity.this, "NEXT ANGLE: " + currentAngle, Toast.LENGTH_SHORT).show();
+
+    }
+
+    public void clearData()
+    {
+        {
+            String data = "";
+            FileOutputStream fos = null;
+
+            try {
+                fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
+                fos.write(data.getBytes());
+
+                System.out.println("Saved to " + getFilesDir() + "/" + FILE_NAME);
+
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } finally {
+                if (fos != null)
+                {
+                    try {
+                        fos.close();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }
+    }
+    public void saveData(float value)
+    {
+        String data = "Starting Points:\nx: " + x_start + "\ny: " + y_start + "\nAngle: " + currentAngle + "\nPoint: " + value + "\n";
+        FileOutputStream fos = null;
+
+        try {
+            fos = openFileOutput(FILE_NAME, MODE_APPEND);
+            fos.write(data.getBytes());
+
+            System.out.println("Saved to " + getFilesDir() + "/" + FILE_NAME);
+
+            //Toast.makeText(this, "Saved to " + getFilesDir() + "/" + FILE_NAME, Toast.LENGTH_LONG).show();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (fos != null)
+            {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
     }
 }
