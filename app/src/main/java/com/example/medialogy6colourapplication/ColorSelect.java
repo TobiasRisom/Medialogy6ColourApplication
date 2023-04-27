@@ -12,40 +12,42 @@ import android.view.View;
 import android.widget.Button;
 
 public class ColorSelect extends AppCompatActivity {
-    Button[] levelGroup = new Button[3];
+    Button[] buttonGroup = new Button[3];
+
+    float[][] YxyCoordinates = { {0.2f, 0.3f, 0.3f}, {0.2f, 0.2f, 0.2f}, {0.2f, 0.15f, 0.2f} };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_color_select);
-        levelGroup[0] = findViewById(R.id.level1);
-        levelGroup[1] = findViewById(R.id.level2);
-        levelGroup[2] = findViewById(R.id.level3);
+        buttonSetup();
 
-        levelGroup[0].setOnClickListener(new View.OnClickListener() {
+
+
+        buttonGroup[0].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                float[] Yxy = {0.2f, 0.3f, 0.3f};
+                float[] Yxy = {YxyCoordinates[0][0], YxyCoordinates[0][1], YxyCoordinates[0][2]};
                 Intent i = new Intent(ColorSelect.this, MainActivity.class);
                 i.putExtra("values", Yxy);
                 startActivity(i);
             }
         });
 
-        levelGroup[1].setOnClickListener(new View.OnClickListener() {
+        buttonGroup[1].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                float[] Yxy = {0.2f, 0.2f, 0.2f};
+                float[] Yxy = {YxyCoordinates[1][0], YxyCoordinates[1][1], YxyCoordinates[1][2]};
                 Intent i = new Intent(ColorSelect.this, MainActivity.class);
                 i.putExtra("values", Yxy);
                 startActivity(i);
             }
         });
 
-        levelGroup[2].setOnClickListener(new View.OnClickListener() {
+        buttonGroup[2].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                float[] Yxy = {0.2f, 0.15f, 0.2f};
+                float[] Yxy = {YxyCoordinates[2][0], YxyCoordinates[2][1], YxyCoordinates[2][2]};
                 Intent i = new Intent(ColorSelect.this, MainActivity.class);
                 i.putExtra("values", Yxy);
                 startActivity(i);
@@ -130,5 +132,28 @@ public class ColorSelect extends AppCompatActivity {
             System.out.println();
         }
         return(sRGB);
+    }
+
+    void buttonSetup()
+    {
+        for(int i = 0; i < buttonGroup.length; i++)
+        {
+            switch(i)
+            {
+                case 0:
+                    buttonGroup[i] = findViewById(R.id.level1);
+                    break;
+                case 1:
+                    buttonGroup[i] = findViewById(R.id.level2);
+                    break;
+                case 2:
+                    buttonGroup[i] = findViewById(R.id.level3);
+                    break;
+            }
+
+            Drawable background = buttonGroup[i].getBackground();
+            int[] colors = YxyTosRGB(YxyCoordinates[i][0], YxyCoordinates[i][1], YxyCoordinates[i][2]);
+            background.setColorFilter((Color.rgb(colors[0], colors[1], colors[2])), PorterDuff.Mode.SRC_IN);
+        }
     }
 }
