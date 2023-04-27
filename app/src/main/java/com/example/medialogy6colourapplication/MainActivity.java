@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     // button1 = Yes
     // button2 = No
     // button3 = Unsure
-    Button button1, button2, button3;
+    Button button1, button2, button3, undo;
     ProgressBar progressBar;
     View circle1, circle2;
     int[] currentRGB;
@@ -49,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
     boolean[] isCompleted;
     int buttonID;
     int narrowAreaErrorCount = 0;
+    boolean progressNudge = true;
+    boolean firstValue = false;
+    int steps = 0;
+    float value = 0f;
 
     // Create the txt file for storing data
     private static final String FILE_NAME = "some_data.txt";
@@ -63,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         button1 = findViewById(R.id.button);
         button2 = findViewById(R.id.button2);
         button3 = findViewById(R.id.button3);
+        undo = findViewById(R.id.undo);
         progressBar = findViewById(R.id.progressBar);
         progressBar.setProgress(0);
 
@@ -79,13 +84,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         float[] startingPoint = angleToCoordinates(x_start, y_start, 0, currentAngle);
-        int[] startingPointRGB = YxyTosRGB(0.2f, startingPoint[0], startingPoint[1]);
+        int[] startingPointRGB = YxyTosRGB(Y_start, startingPoint[0], startingPoint[1]);
         currentRGB = new int[]{startingPointRGB[0], startingPointRGB[1], startingPointRGB[2]};
         setColor(currentRGB[0], currentRGB[1], currentRGB[2], currentRGB[0], currentRGB[1], currentRGB[2]);
 
         float[] coordinates = angleToCoordinates(x_start, y_start, areaBuffer[areaCheckOrder[0]], currentAngle);
-        int[] testColors = YxyTosRGB(0.2f, coordinates[0], coordinates[1]);
-        setColor(testColors[0], testColors[1], testColors[2]);
+        int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
+        setColor(testColors[0], testColors[1], testColors[2], true);
 
         // Add the Listener to the Submit Button
         button1.setOnClickListener(new View.OnClickListener() {
@@ -111,6 +116,66 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 main(true);
+            }
+        });
+
+        undo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                // Undo on initial narrowing down of area
+                if (index > 0) {
+                    index--;
+                    float[] coordinates = angleToCoordinates(x_start, y_start, areaBuffer[areaCheckOrder[index]], currentAngle);
+                    int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
+                    setColor(testColors[0], testColors[1], testColors[2], false);
+                    System.out.println("Undo button!");
+                    System.out.println("Currently testing: " + areaBuffer[areaCheckOrder[index]]);
+                    System.out.println("Current threshold values: " + areaBufferCheck[0] + ", " + areaBufferCheck[1] + ", " + areaBufferCheck[2] + ", " + areaBufferCheck[3] + ", " + areaBufferCheck[4] + ", ");
+                } else if (areaCheck == false) {
+                    // Undo on area split
+                    if (split == true) {
+                        index = 4;
+                        areaCheck = true;
+                        float[] coordinates = angleToCoordinates(x_start, y_start, areaBuffer[areaCheckOrder[index]], currentAngle);
+                        int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
+                        setColor(testColors[0], testColors[1], testColors[2], false);
+                        System.out.println("Undo button!");
+                        System.out.println("Currently testing: " + areaBuffer[areaCheckOrder[index]]);
+                        System.out.println("Current threshold values: " + areaBufferCheck[0] + ", " + areaBufferCheck[1] + ", " + areaBufferCheck[2] + ", " + areaBufferCheck[3] + ", " + areaBufferCheck[4] + ", ");
+                    } else {
+                        // If the player presses Undo on the first after split
+                        if (firstValue || steps == 0) {
+                            split = true;
+                            areaCheck = false;
+                            narrowArea();
+                            float[] coordinates = angleToCoordinates(x_start, y_start, precisionTestValue, currentAngle);
+                            int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
+                            setColor(testColors[0], testColors[1], testColors[2], true);
+                            System.out.println("Currently testing: " + precisionTestValue);
+                        } else {
+                            steps--;
+                            // If the current test is Low Value, then the previous one must be High Value
+                            if (isLowValue) {
+                                highValue = roundToDecimal(highValue += 0.001f, 3);
+                                isLowValue = false;
+                                float[] coordinates = angleToCoordinates(x_start, y_start, highValue, currentAngle);
+                                int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
+                                setColor(testColors[0], testColors[1], testColors[2], true);
+                                System.out.println("Currently testing: " + highValue);
+                            } else {
+                                lowValue = roundToDecimal(lowValue -= 0.001f, 3);
+                                isLowValue = true;
+                                float[] coordinates = angleToCoordinates(x_start, y_start, highValue, currentAngle);
+                                int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
+                                setColor(testColors[0], testColors[1], testColors[2], true);
+                                System.out.println("Currently testing: " + lowValue);
+                            }
+                        }
+                    }
+                }
+                System.out.println("Index is now: " + index + "Steps: " + steps);
+                System.out.println("Lowvalue " + lowValue + "Highvalue: " + highValue);
             }
         });
     }
@@ -143,8 +208,8 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("Value is between: " + lowValue + " and " + highValue);
                     precisionTestValue = roundToDecimal(highValue -((highValue - lowValue) / 2f), 3);
                     float[] coordinates = angleToCoordinates(x_start, y_start, precisionTestValue, currentAngle);
-                    int[] testColors = YxyTosRGB(0.2f, coordinates[0], coordinates[1]);
-                    setColor(testColors[0], testColors[1], testColors[2]);
+                    int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
+                    setColor(testColors[0], testColors[1], testColors[2], true);
                     System.out.println("Currently testing: " + precisionTestValue);
                 }
                 else
@@ -157,10 +222,8 @@ public class MainActivity extends AppCompatActivity {
                         areaCheckOrder = shuffledArray(new int[] {0,1,2,3,4});
                         saveData(-1);
                         nextAngle();
-                        progressBar.setProgress(0);
                     }
                     else {
-                        progressBar.setProgress(0);
 
                         // Reset the test on invalid data (e.g. "[0,0,1,0,1]" or "[1,1,1,1,1]")
                         Toast.makeText(MainActivity.this, "ANSWER INVALID FOR ANGLE. TRY AGAIN.", Toast.LENGTH_SHORT).show();
@@ -169,18 +232,16 @@ public class MainActivity extends AppCompatActivity {
                             areaBufferCheck[i] = 0;
                         }
                         float[] coordinates = angleToCoordinates(x_start, y_start, areaBuffer[areaCheckOrder[index]], currentAngle);
-                        int[] testColors = YxyTosRGB(0.2f, coordinates[0], coordinates[1]);
-                        setColor(testColors[0], testColors[1], testColors[2]);
+                        int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
+                        setColor(testColors[0], testColors[1], testColors[2], true);
                     }
                 }
             }
             else
             {
-                progressBar.incrementProgressBy(10);
-                System.out.println("progress: " + progressBar.getProgress());
                 float[] coordinates = angleToCoordinates(x_start, y_start, areaBuffer[areaCheckOrder[index]], currentAngle);
-                int[] testColors = YxyTosRGB(0.2f, coordinates[0], coordinates[1]);
-                setColor(testColors[0], testColors[1], testColors[2]);
+                int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
+                setColor(testColors[0], testColors[1], testColors[2], true);
                 System.out.println("Currently testing: " + areaBuffer[areaCheckOrder[index]]);
                 System.out.println("Current threshold values: " + areaBufferCheck[0] + ", " + areaBufferCheck[1] + ", " + areaBufferCheck[2] + ", " + areaBufferCheck[3] + ", " + areaBufferCheck[4] + ", ");
             }
@@ -193,7 +254,6 @@ public class MainActivity extends AppCompatActivity {
             // First test splits the area in half. This narrows down the test field a bit.
             if (split == true)
             {
-                progressBar.setProgress(75);
                 if(yesButton)
                 {
                     lowValue = precisionTestValue + 0.001f;
@@ -208,81 +268,77 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("High value: " + highValue + " Low value: " + lowValue);
                 System.out.println("Currently testing: " + lowValue);
                 float[] coordinates = angleToCoordinates(x_start, y_start, lowValue, currentAngle);
-                int[] testColors = YxyTosRGB(0.2f, coordinates[0], coordinates[1]);
-                setColor(testColors[0], testColors[1], testColors[2]);
+                int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
+                setColor(testColors[0], testColors[1], testColors[2], true);
                 split = false;
+                firstValue = true;
             }
 
             // Starts on the lowValue now with one split having been done (example: low = 0.05, high = 0.063)
             // Now the test bounces back and forth until a precise value has been located
             else
             {
+                firstValue = false;
+
+                // If the high value and the low value match, what do we do?
+                // CURRENT SOLUTION: Use that point as the data
                 if(highValue <= lowValue)
                 {
-                    Toast.makeText(MainActivity.this, "ERROR: ANSWER INVALID", Toast.LENGTH_SHORT).show();
-                    System.out.println("ERROR: INVALID ANSWER");
+                    System.out.println("COLOR THRESHOLD FOUND!");
+                    System.out.println("MacAdam Point: " + highValue);
                     areaCheckOrder = shuffledArray(new int[] {0,1,2,3,4});
-                    nextAngle();
-                    progressBar.setProgress(0);
+                    saveData(highValue);
+                    nextAngle(highValue);
                 }
+                else {
+                    steps++;
 
-                if(yesButton)
-                {
-                    // User says the low value is the same - test is narrowed further
-                    if(isLowValue == true)
-                    {
-                        progressBar.incrementProgressBy((100 - progressBar.getProgress()) / 2);
-                        lowValue = roundToDecimal(lowValue += 0.001f, 3);
-                        isLowValue = false;
-                        float[] coordinates = angleToCoordinates(x_start, y_start, highValue, currentAngle);
-                        int[] testColors = YxyTosRGB(0.2f, coordinates[0], coordinates[1]);
-                        setColor(testColors[0], testColors[1], testColors[2]);
+                    if (yesButton) {
+                        // User says the low value is the same - test is narrowed further
+                        if (isLowValue == true) {
+                            lowValue = roundToDecimal(lowValue += 0.001f, 3);
+                            isLowValue = false;
+                            float[] coordinates = angleToCoordinates(x_start, y_start, highValue, currentAngle);
+                            int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
+                            setColor(testColors[0], testColors[1], testColors[2], true);
 
-                        System.out.println("High value: " + highValue + " Low value: " + lowValue);
-                        System.out.println("Currently testing: " + highValue);
-                    }
+                            System.out.println("High value: " + highValue + " Low value: " + lowValue);
+                            System.out.println("Currently testing: " + highValue);
+                        }
 
-                    // User says the high value is the same - this must be the highest possible matching color.
-                    else if(isLowValue == false)
-                    {
-                        progressBar.setProgress(100);
-                        System.out.println("COLOR THRESHOLD FOUND!");
-                        System.out.println("MacAdam Point: " + highValue);
-                        areaCheckOrder = shuffledArray(new int[] {0,1,2,3,4});
-                        saveData(highValue);
-                        nextAngle(highValue);
-                        progressBar.setProgress(0);
-                    }
-                }
-                else if(!yesButton) {
+                        // User says the high value is the same - this must be the highest possible matching color.
+                        else if (isLowValue == false) {
+                            System.out.println("COLOR THRESHOLD FOUND!");
+                            System.out.println("MacAdam Point: " + highValue);
+                            areaCheckOrder = shuffledArray(new int[]{0, 1, 2, 3, 4});
+                            saveData(highValue);
+                            nextAngle(highValue);
+                        }
+                    } else if (!yesButton) {
 
-                    // User says the high value is different - test is narrowed further
-                    if (isLowValue == false) {
-                        progressBar.incrementProgressBy((100 - progressBar.getProgress()) / 2);
-                        highValue = roundToDecimal(highValue -= 0.001f, 3);
-                        isLowValue = true;
-                        float[] coordinates = angleToCoordinates(x_start, y_start, lowValue, currentAngle);
-                        int[] testColors = YxyTosRGB(0.2f, coordinates[0], coordinates[1]);
-                        setColor(testColors[0], testColors[1], testColors[2]);
+                        // User says the high value is different - test is narrowed further
+                        if (isLowValue == false) {
+                            highValue = roundToDecimal(highValue -= 0.001f, 3);
+                            isLowValue = true;
+                            float[] coordinates = angleToCoordinates(x_start, y_start, lowValue, currentAngle);
+                            int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
+                            setColor(testColors[0], testColors[1], testColors[2], true);
 
-                        System.out.println("High value: " + highValue + " Low value: " + lowValue);
-                        System.out.println("Currently testing: " + lowValue);
-                    }
-                    // User says the low value is different - this must be the value 1 step above the highest possible matching color.
-                    else if(isLowValue == true)
-                    {
-                        progressBar.setProgress(100);
-                        System.out.println("COLOR THRESHOLD FOUND!");
-                        System.out.println("MacAdam Point: " + (lowValue - 0.001f));
-                        areaCheckOrder = shuffledArray(new int[] {0,1,2,3,4});
-                        saveData(lowValue - 0.001f);
-                        nextAngle(lowValue - 0.001f);
-                        progressBar.setProgress(0);
+                            System.out.println("High value: " + highValue + " Low value: " + lowValue);
+                            System.out.println("Currently testing: " + lowValue);
+                        }
+                        // User says the low value is different - this must be the value 1 step above the highest possible matching color.
+                        else if (isLowValue == true) {
+                            System.out.println("COLOR THRESHOLD FOUND!");
+                            System.out.println("MacAdam Point: " + (lowValue - 0.001f));
+                            areaCheckOrder = shuffledArray(new int[]{0, 1, 2, 3, 4});
+                            saveData(lowValue - 0.001f);
+                            nextAngle(lowValue - 0.001f);
+                        }
                     }
                 }
             }
         }
-
     }
     Boolean validArea()
     {
@@ -537,7 +593,7 @@ public class MainActivity extends AppCompatActivity {
         Drawable background2 = circle2.getBackground();
         background2.setColorFilter((Color.rgb(RC2, GC2, BC2)), PorterDuff.Mode.SRC_IN);
     }
-    void setColor(int RC2, int GC2, int BC2)
+    void setColor(int RC2, int GC2, int BC2, boolean shuffle)
     {
         circle1 = findViewById(R.id.circle1);
         Drawable background1 = circle1.getBackground();
@@ -552,8 +608,7 @@ public class MainActivity extends AppCompatActivity {
             background2.setColorFilter((Color.rgb(RC2, GC2, BC2)), PorterDuff.Mode.SRC_IN);
             System.out.println("Left color is standard");
         }
-        else
-        {
+        else {
             background1.setColorFilter((Color.rgb(RC2, GC2, BC2)), PorterDuff.Mode.SRC_IN);
             background2.setColorFilter((Color.rgb(currentRGB[0], currentRGB[1], currentRGB[2])), PorterDuff.Mode.SRC_IN);
             System.out.println("Right color is standard");
@@ -573,7 +628,19 @@ public class MainActivity extends AppCompatActivity {
     void nextAngle(float ellipsePoint)
     {
         //Toast.makeText(MainActivity.this, "THRESHOLD FOUND: " + ellipsePoint, Toast.LENGTH_SHORT).show();
-        currentAngle += 360;
+        currentAngle += 45;
+
+        // Swap between adding 12 and 13 to the progress bar since it can't take 12.5 >:(
+        if(progressNudge)
+        {
+            progressBar.incrementProgressBy(13);
+        }
+        else
+        {
+            progressBar.incrementProgressBy(12);
+        }
+        progressNudge = !progressNudge;
+
         if(currentAngle == 360)
         {
             Intent i = new Intent(MainActivity.this, ColorSelect.class);
@@ -585,7 +652,7 @@ public class MainActivity extends AppCompatActivity {
         areaCheck = true;
         index = 0;
         float[] coordinates = angleToCoordinates(x_start, y_start, areaBuffer[areaCheckOrder[0]], currentAngle);
-        int[] testColors = YxyTosRGB(0.2f, coordinates[0], coordinates[1]);
+        int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
         setColor(53, 49, 64, testColors[0], testColors[1], testColors[2]);
         //Toast.makeText(MainActivity.this, "NEXT ANGLE: " + currentAngle, Toast.LENGTH_SHORT).show();
 
@@ -594,6 +661,18 @@ public class MainActivity extends AppCompatActivity {
     void nextAngle()
     {
         currentAngle += 45;
+
+        // Swap between adding 12 and 13 to the progress bar since it can't take 12.5 >:(
+        if(progressNudge)
+        {
+            progressBar.incrementProgressBy(13);
+        }
+        else
+        {
+            progressBar.incrementProgressBy(12);
+        }
+        progressNudge = !progressNudge;
+
         if(currentAngle == 360)
         {
             Intent i = new Intent(MainActivity.this, ColorSelect.class);
@@ -605,9 +684,9 @@ public class MainActivity extends AppCompatActivity {
         areaCheck = true;
         index = 0;
         float[] coordinates = angleToCoordinates(x_start, y_start, areaBuffer[areaCheckOrder[0]], currentAngle);
-        int[] testColors = YxyTosRGB(0.2f, coordinates[0], coordinates[1]);
+        int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
         setColor(53, 49, 64, testColors[0], testColors[1], testColors[2]);
-        Toast.makeText(MainActivity.this, "NEXT ANGLE: " + currentAngle, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MainActivity.this, "NEXT ANGLE: " + currentAngle, Toast.LENGTH_SHORT).show();
 
     }
 
