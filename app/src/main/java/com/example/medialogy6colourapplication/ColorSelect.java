@@ -3,6 +3,7 @@ package com.example.medialogy6colourapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BlendMode;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -10,11 +11,14 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class ColorSelect extends AppCompatActivity {
     Button[] buttonGroup = new Button[3];
+    boolean[] buttonActive = {true, true, true};
+    boolean firstTime = true;
 
-    float[][] YxyCoordinates = { {0.2f, 0.3f, 0.3f}, {0.2f, 0.2f, 0.2f}, {0.2f, 0.15f, 0.2f} };
+    float[][] YxyCoordinates = { {0.2f, 0.3f, 0.3f}, {0.2f, 0.4f, 0.4f}, {0.2f, 0.15f, 0.2f} };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,35 +26,75 @@ public class ColorSelect extends AppCompatActivity {
         setContentView(R.layout.activity_color_select);
         buttonSetup();
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            int ID = extras.getInt("ID");
+            buttonActive = extras.getBooleanArray("array");
+            buttonActive[ID] = false;
+        }
+
+        for(int i = 0; i < buttonGroup.length; i++)
+        {
+            if(buttonActive[i] == false)
+            {
+                buttonGroup[i].setText("✔");
+                buttonGroup[i].setTextSize(30f);
+            }
+        }
+
 
 
         buttonGroup[0].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                float[] Yxy = {YxyCoordinates[0][0], YxyCoordinates[0][1], YxyCoordinates[0][2]};
-                Intent i = new Intent(ColorSelect.this, MainActivity.class);
-                i.putExtra("values", Yxy);
-                startActivity(i);
+                if(buttonActive[0] == true) {
+                    float[] Yxy = {YxyCoordinates[0][0], YxyCoordinates[0][1], YxyCoordinates[0][2]};
+                    Intent i = new Intent(ColorSelect.this, MainActivity.class);
+                    i.putExtra("values", Yxy);
+                    i.putExtra("button", 0);
+                    i.putExtra("array", buttonActive);
+                    startActivity(i);
+                }
+                else
+                {
+                    Toast.makeText(ColorSelect.this, "Level already done!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         buttonGroup[1].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                float[] Yxy = {YxyCoordinates[1][0], YxyCoordinates[1][1], YxyCoordinates[1][2]};
-                Intent i = new Intent(ColorSelect.this, MainActivity.class);
-                i.putExtra("values", Yxy);
-                startActivity(i);
+                if(buttonActive[1] == true) {
+                    float[] Yxy = {YxyCoordinates[1][0], YxyCoordinates[1][1], YxyCoordinates[1][2]};
+                    Intent i = new Intent(ColorSelect.this, MainActivity.class);
+                    i.putExtra("values", Yxy);
+                    i.putExtra("button", 1);
+                    i.putExtra("array", buttonActive);
+                    startActivity(i);
+                }
+                else
+                {
+                    Toast.makeText(ColorSelect.this, "Level already done!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         buttonGroup[2].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(buttonActive[2] == true) {
                 float[] Yxy = {YxyCoordinates[2][0], YxyCoordinates[2][1], YxyCoordinates[2][2]};
                 Intent i = new Intent(ColorSelect.this, MainActivity.class);
                 i.putExtra("values", Yxy);
+                i.putExtra("button", 2);
+                i.putExtra("array", buttonActive);
                 startActivity(i);
+                }
+                    else
+                {
+                    Toast.makeText(ColorSelect.this, "Level already done!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

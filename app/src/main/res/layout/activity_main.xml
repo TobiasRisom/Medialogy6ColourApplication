@@ -10,6 +10,11 @@
     tools:context=".MainActivity">
 
     <!-- add RadioGroup which contain the many RadioButton-->
+
+    <!-- add button For Submit the Selected item-->
+
+    <!-- add clear button for clear the selected item-->
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -18,12 +23,8 @@
         android:textSize="34sp"
         android:textStyle="bold"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteX="33dp"
         tools:layout_editor_absoluteY="16dp" />
-
-    <!-- add button For Submit the Selected item-->
-
-    <!-- add clear button for clear the selected item-->
 
     <View
         android:id="@+id/circle1"
@@ -65,7 +66,9 @@
         android:layout_width="338dp"
         android:layout_height="78dp"
         android:layout_marginTop="40dp"
+        android:backgroundTint="#646464"
         android:text="@string/Yes"
+        android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
@@ -75,7 +78,9 @@
         android:id="@+id/button2"
         android:layout_width="338dp"
         android:layout_height="78dp"
+        android:backgroundTint="#646464"
         android:text="@string/No"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/button3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
@@ -87,7 +92,9 @@
         android:layout_width="338dp"
         android:layout_height="78dp"
         android:layout_marginBottom="108dp"
+        android:backgroundTint="#646464"
         android:text="Unsure"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"

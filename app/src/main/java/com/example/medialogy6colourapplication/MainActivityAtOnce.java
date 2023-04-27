@@ -3,26 +3,21 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivityAtOnce extends AppCompatActivity {
 
     // button1 = Yes
     // button2 = No
@@ -153,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                     if(narrowAreaErrorCount == 5)
                     {
                         narrowAreaErrorCount = 0;
-                        Toast.makeText(MainActivity.this, "ANSWER INVALID. MOVING ON.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivityAtOnce.this, "ANSWER INVALID. MOVING ON.", Toast.LENGTH_SHORT).show();
                         areaCheckOrder = shuffledArray(new int[] {0,1,2,3,4});
                         saveData(-1);
                         nextAngle();
@@ -163,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
                         progressBar.setProgress(0);
 
                         // Reset the test on invalid data (e.g. "[0,0,1,0,1]" or "[1,1,1,1,1]")
-                        Toast.makeText(MainActivity.this, "ANSWER INVALID FOR ANGLE. TRY AGAIN.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivityAtOnce.this, "ANSWER INVALID FOR ANGLE. TRY AGAIN.", Toast.LENGTH_SHORT).show();
                         System.out.println("Answer not valid. Restarting...");
                         for (int i = 0; i < areaBufferCheck.length; i++) {
                             areaBufferCheck[i] = 0;
@@ -219,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
             {
                 if(highValue <= lowValue)
                 {
-                    Toast.makeText(MainActivity.this, "ERROR: ANSWER INVALID", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivityAtOnce.this, "ERROR: ANSWER INVALID", Toast.LENGTH_SHORT).show();
                     System.out.println("ERROR: INVALID ANSWER");
                     areaCheckOrder = shuffledArray(new int[] {0,1,2,3,4});
                     nextAngle();
@@ -576,7 +571,7 @@ public class MainActivity extends AppCompatActivity {
         currentAngle += 360;
         if(currentAngle == 360)
         {
-            Intent i = new Intent(MainActivity.this, ColorSelect.class);
+            Intent i = new Intent(MainActivityAtOnce.this, ColorSelect.class);
             i.putExtra("array", isCompleted);
             i.putExtra("ID", buttonID);
             System.out.println("Just finished testing button: " + buttonID);
@@ -596,7 +591,7 @@ public class MainActivity extends AppCompatActivity {
         currentAngle += 45;
         if(currentAngle == 360)
         {
-            Intent i = new Intent(MainActivity.this, ColorSelect.class);
+            Intent i = new Intent(MainActivityAtOnce.this, ColorSelect.class);
             i.putExtra("array", isCompleted);
             i.putExtra("ID", buttonID);
             System.out.println("Just finished testing button: " + buttonID);
@@ -607,7 +602,7 @@ public class MainActivity extends AppCompatActivity {
         float[] coordinates = angleToCoordinates(x_start, y_start, areaBuffer[areaCheckOrder[0]], currentAngle);
         int[] testColors = YxyTosRGB(0.2f, coordinates[0], coordinates[1]);
         setColor(53, 49, 64, testColors[0], testColors[1], testColors[2]);
-        Toast.makeText(MainActivity.this, "NEXT ANGLE: " + currentAngle, Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivityAtOnce.this, "NEXT ANGLE: " + currentAngle, Toast.LENGTH_SHORT).show();
 
     }
 
