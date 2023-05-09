@@ -15,34 +15,11 @@
 
     <!-- add clear button for clear the selected item-->
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Differentio"
-        android:textSize="34sp"
-        android:textStyle="bold"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="33dp"
-        tools:layout_editor_absoluteY="16dp" />
-
-    <View
-        android:id="@+id/circle1"
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="95dp"
-        android:width="120dp"
-        android:height="120dp"
-        android:background="@drawable/circle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <View
         android:id="@+id/circle2"
         android:layout_width="125dp"
         android:layout_height="125dp"
-        android:layout_marginTop="95dp"
+        android:layout_marginTop="180dp"
         android:layout_marginEnd="60dp"
         android:width="120dp"
         android:height="120dp"
@@ -50,36 +27,37 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Do you perceive the two colours on-screen as identical?"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+    <View
+        android:id="@+id/circle1"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="180dp"
+        android:width="120dp"
+        android:height="120dp"
+        android:background="@drawable/circle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.405" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="338dp"
         android:layout_height="78dp"
         android:layout_marginTop="40dp"
-        android:backgroundTint="#646464"
-        android:text="@string/Yes"
+        android:backgroundTint="#878787"
+        android:text="SAME"
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="338dp"
         android:layout_height="78dp"
-        android:backgroundTint="#646464"
-        android:text="@string/No"
+        android:backgroundTint="#707070"
+        android:text="DIFFERENT"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/button3"
         app:layout_constraintEnd_toEndOf="parent"
@@ -91,8 +69,8 @@
         android:id="@+id/button3"
         android:layout_width="338dp"
         android:layout_height="78dp"
-        android:layout_marginBottom="108dp"
-        android:backgroundTint="#646464"
+        android:layout_marginBottom="132dp"
+        android:backgroundTint="#656565"
         android:text="Unsure"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -107,24 +85,17 @@
         android:layout_height="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintHorizontal_bias="0.508"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button3"
-        app:layout_constraintVertical_bias="0.488" />
+        app:layout_constraintVertical_bias="0.685" />
 
-    <Button
-        android:id="@+id/undo"
-        android:layout_width="57dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="32dp"
-        android:backgroundTint="#646464"
-        android:text="Undo"
-        android:textColor="#FFFFFF"
-        android:textSize="8sp"
-        app:layout_constraintBottom_toTopOf="@+id/circle2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.34" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="262dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

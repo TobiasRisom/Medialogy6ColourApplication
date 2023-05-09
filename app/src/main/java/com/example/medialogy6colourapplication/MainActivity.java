@@ -1,33 +1,33 @@
 package com.example.medialogy6colourapplication;
+
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Toast;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class MainActivity extends AppCompatActivity {
 
     // button1 = Yes
     // button2 = No
     // button3 = Unsure
-    Button button1, button2, button3, undo;
+    Button button1, button2, button3;
     ProgressBar progressBar;
     View circle1, circle2;
     int[] currentRGB;
@@ -49,8 +49,9 @@ public class MainActivity extends AppCompatActivity {
     boolean[] isCompleted;
     int buttonID;
     int narrowAreaErrorCount = 0;
-    boolean progressNudge = true;
     boolean firstValue = false;
+    boolean noSwitch = false;
+    boolean buttonActive = true;
     int steps = 0;
     float value = 0f;
 
@@ -67,17 +68,16 @@ public class MainActivity extends AppCompatActivity {
         button1 = findViewById(R.id.button);
         button2 = findViewById(R.id.button2);
         button3 = findViewById(R.id.button3);
-        undo = findViewById(R.id.undo);
         progressBar = findViewById(R.id.progressBar);
         progressBar.setProgress(0);
 
-        clearData();
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             float[] Yxy = extras.getFloatArray("values");
             Y_start = Yxy[0];
             x_start = Yxy[1];
             y_start = Yxy[2];
+            noSwitch = true;
 
             buttonID = extras.getInt("button");
             isCompleted = extras.getBooleanArray("array");
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
         float[] coordinates = angleToCoordinates(x_start, y_start, areaBuffer[areaCheckOrder[0]], currentAngle);
         int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
-        setColor(testColors[0], testColors[1], testColors[2], true);
+        setColor(testColors[0], testColors[1], testColors[2]);
 
         // Add the Listener to the Submit Button
         button1.setOnClickListener(new View.OnClickListener() {
@@ -98,84 +98,27 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                main(true);
+                if(buttonActive == true)
+                {
+                    main(true);
+                }
             }
         });
 
         button2.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v)
-            {
-                main(false);
-            }
-        });
+           @Override
+           public void onClick(View v) {
+               if (buttonActive == true) {
+                   main(false);
+               }
+           }
+       });
 
         button3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                main(true);
-            }
-        });
-
-        undo.setOnClickListener(new View.OnClickListener() {
-            @Override
             public void onClick(View v) {
-
-                // Undo on initial narrowing down of area
-                if (index > 0) {
-                    index--;
-                    float[] coordinates = angleToCoordinates(x_start, y_start, areaBuffer[areaCheckOrder[index]], currentAngle);
-                    int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
-                    setColor(testColors[0], testColors[1], testColors[2], false);
-                    System.out.println("Undo button!");
-                    System.out.println("Currently testing: " + areaBuffer[areaCheckOrder[index]]);
-                    System.out.println("Current threshold values: " + areaBufferCheck[0] + ", " + areaBufferCheck[1] + ", " + areaBufferCheck[2] + ", " + areaBufferCheck[3] + ", " + areaBufferCheck[4] + ", ");
-                } else if (areaCheck == false) {
-                    // Undo on area split
-                    if (split == true) {
-                        index = 4;
-                        areaCheck = true;
-                        float[] coordinates = angleToCoordinates(x_start, y_start, areaBuffer[areaCheckOrder[index]], currentAngle);
-                        int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
-                        setColor(testColors[0], testColors[1], testColors[2], false);
-                        System.out.println("Undo button!");
-                        System.out.println("Currently testing: " + areaBuffer[areaCheckOrder[index]]);
-                        System.out.println("Current threshold values: " + areaBufferCheck[0] + ", " + areaBufferCheck[1] + ", " + areaBufferCheck[2] + ", " + areaBufferCheck[3] + ", " + areaBufferCheck[4] + ", ");
-                    } else {
-                        // If the player presses Undo on the first after split
-                        if (firstValue || steps == 0) {
-                            split = true;
-                            areaCheck = false;
-                            narrowArea();
-                            float[] coordinates = angleToCoordinates(x_start, y_start, precisionTestValue, currentAngle);
-                            int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
-                            setColor(testColors[0], testColors[1], testColors[2], true);
-                            System.out.println("Currently testing: " + precisionTestValue);
-                        } else {
-                            steps--;
-                            // If the current test is Low Value, then the previous one must be High Value
-                            if (isLowValue) {
-                                highValue = roundToDecimal(highValue += 0.001f, 3);
-                                isLowValue = false;
-                                float[] coordinates = angleToCoordinates(x_start, y_start, highValue, currentAngle);
-                                int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
-                                setColor(testColors[0], testColors[1], testColors[2], true);
-                                System.out.println("Currently testing: " + highValue);
-                            } else {
-                                lowValue = roundToDecimal(lowValue -= 0.001f, 3);
-                                isLowValue = true;
-                                float[] coordinates = angleToCoordinates(x_start, y_start, highValue, currentAngle);
-                                int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
-                                setColor(testColors[0], testColors[1], testColors[2], true);
-                                System.out.println("Currently testing: " + lowValue);
-                            }
-                        }
-                    }
+                if (buttonActive == true) {
+                    main(true);
                 }
-                System.out.println("Index is now: " + index + "Steps: " + steps);
-                System.out.println("Lowvalue " + lowValue + "Highvalue: " + highValue);
             }
         });
     }
@@ -183,14 +126,13 @@ public class MainActivity extends AppCompatActivity {
     void main(boolean yesButton)
     {
         // AREA NARROW
-        if (areaCheck == true)
+        if (areaCheck)
         {
             if(yesButton)
             {
                 areaBufferCheck[areaCheckOrder[index]] = 1;
             }
-            else if(!yesButton)
-            {
+            else {
                 areaBufferCheck[areaCheckOrder[index]] = 0;
             }
             index++;
@@ -201,24 +143,27 @@ public class MainActivity extends AppCompatActivity {
                 // If the area is valid, we should have an area narrowed down. The next test is the halfway point in this area.
                 if(validArea() == true)
                 {
+                    progressBar.incrementProgressBy(6);
                     split = true;
                     narrowArea();
                     areaCheck = false;
+                    narrowAreaErrorCount = 0;
                     System.out.println("Valid area found!");
                     System.out.println("Value is between: " + lowValue + " and " + highValue);
                     precisionTestValue = roundToDecimal(highValue -((highValue - lowValue) / 2f), 3);
                     float[] coordinates = angleToCoordinates(x_start, y_start, precisionTestValue, currentAngle);
                     int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
-                    setColor(testColors[0], testColors[1], testColors[2], true);
+                    setColor(testColors[0], testColors[1], testColors[2]);
                     System.out.println("Currently testing: " + precisionTestValue);
                 }
                 else
                 {
                     narrowAreaErrorCount++;
-                    if(narrowAreaErrorCount == 5)
+                    if(narrowAreaErrorCount == 3)
                     {
+                        saveDataError();
                         narrowAreaErrorCount = 0;
-                        Toast.makeText(MainActivity.this, "ANSWER INVALID. MOVING ON.", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this, "ANSWER INVALID. MOVING ON.", Toast.LENGTH_SHORT).show();
                         areaCheckOrder = shuffledArray(new int[] {0,1,2,3,4});
                         saveData(-1);
                         nextAngle();
@@ -226,14 +171,15 @@ public class MainActivity extends AppCompatActivity {
                     else {
 
                         // Reset the test on invalid data (e.g. "[0,0,1,0,1]" or "[1,1,1,1,1]")
-                        Toast.makeText(MainActivity.this, "ANSWER INVALID FOR ANGLE. TRY AGAIN.", Toast.LENGTH_SHORT).show();
+                        saveDataError();
+                        //Toast.makeText(MainActivity.this, "ANSWER INVALID FOR ANGLE. TRY AGAIN.", Toast.LENGTH_SHORT).show();
                         System.out.println("Answer not valid. Restarting...");
                         for (int i = 0; i < areaBufferCheck.length; i++) {
                             areaBufferCheck[i] = 0;
                         }
                         float[] coordinates = angleToCoordinates(x_start, y_start, areaBuffer[areaCheckOrder[index]], currentAngle);
                         int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
-                        setColor(testColors[0], testColors[1], testColors[2], true);
+                        setColor(testColors[0], testColors[1], testColors[2]);
                     }
                 }
             }
@@ -241,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
             {
                 float[] coordinates = angleToCoordinates(x_start, y_start, areaBuffer[areaCheckOrder[index]], currentAngle);
                 int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
-                setColor(testColors[0], testColors[1], testColors[2], true);
+                setColor(testColors[0], testColors[1], testColors[2]);
                 System.out.println("Currently testing: " + areaBuffer[areaCheckOrder[index]]);
                 System.out.println("Current threshold values: " + areaBufferCheck[0] + ", " + areaBufferCheck[1] + ", " + areaBufferCheck[2] + ", " + areaBufferCheck[3] + ", " + areaBufferCheck[4] + ", ");
             }
@@ -269,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("Currently testing: " + lowValue);
                 float[] coordinates = angleToCoordinates(x_start, y_start, lowValue, currentAngle);
                 int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
-                setColor(testColors[0], testColors[1], testColors[2], true);
+                setColor(testColors[0], testColors[1], testColors[2]);
                 split = false;
                 firstValue = true;
             }
@@ -300,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
                             isLowValue = false;
                             float[] coordinates = angleToCoordinates(x_start, y_start, highValue, currentAngle);
                             int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
-                            setColor(testColors[0], testColors[1], testColors[2], true);
+                            setColor(testColors[0], testColors[1], testColors[2]);
 
                             System.out.println("High value: " + highValue + " Low value: " + lowValue);
                             System.out.println("Currently testing: " + highValue);
@@ -322,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
                             isLowValue = true;
                             float[] coordinates = angleToCoordinates(x_start, y_start, lowValue, currentAngle);
                             int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
-                            setColor(testColors[0], testColors[1], testColors[2], true);
+                            setColor(testColors[0], testColors[1], testColors[2]);
 
                             System.out.println("High value: " + highValue + " Low value: " + lowValue);
                             System.out.println("Currently testing: " + lowValue);
@@ -340,6 +286,64 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+
+    void undo()
+    {/*
+        // Undo on initial narrowing down of area
+        if (index > 0) {
+            index--;
+            float[] coordinates = angleToCoordinates(x_start, y_start, areaBuffer[areaCheckOrder[index]], currentAngle);
+            int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
+            setColor(testColors[0], testColors[1], testColors[2], false);
+            System.out.println("Undo button!");
+            System.out.println("Currently testing: " + areaBuffer[areaCheckOrder[index]]);
+            System.out.println("Current threshold values: " + areaBufferCheck[0] + ", " + areaBufferCheck[1] + ", " + areaBufferCheck[2] + ", " + areaBufferCheck[3] + ", " + areaBufferCheck[4] + ", ");
+        } else if (areaCheck == false) {
+            // Undo on area split
+            if (split == true) {
+                index = 4;
+                areaCheck = true;
+                float[] coordinates = angleToCoordinates(x_start, y_start, areaBuffer[areaCheckOrder[index]], currentAngle);
+                int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
+                setColor(testColors[0], testColors[1], testColors[2], false);
+                System.out.println("Undo button!");
+                System.out.println("Currently testing: " + areaBuffer[areaCheckOrder[index]]);
+                System.out.println("Current threshold values: " + areaBufferCheck[0] + ", " + areaBufferCheck[1] + ", " + areaBufferCheck[2] + ", " + areaBufferCheck[3] + ", " + areaBufferCheck[4] + ", ");
+            } else {
+                // If the player presses Undo on the first after split
+                if (firstValue || steps == 0) {
+                    split = true;
+                    areaCheck = false;
+                    narrowArea();
+                    float[] coordinates = angleToCoordinates(x_start, y_start, precisionTestValue, currentAngle);
+                    int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
+                    setColor(testColors[0], testColors[1], testColors[2], true);
+                    System.out.println("Currently testing: " + precisionTestValue);
+                } else {
+                    steps--;
+                    // If the current test is Low Value, then the previous one must be High Value
+                    if (isLowValue) {
+                        highValue = roundToDecimal(highValue += 0.001f, 3);
+                        isLowValue = false;
+                        float[] coordinates = angleToCoordinates(x_start, y_start, highValue, currentAngle);
+                        int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
+                        setColor(testColors[0], testColors[1], testColors[2], true);
+                        System.out.println("Currently testing: " + highValue);
+                    } else {
+                        lowValue = roundToDecimal(lowValue -= 0.001f, 3);
+                        isLowValue = true;
+                        float[] coordinates = angleToCoordinates(x_start, y_start, highValue, currentAngle);
+                        int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
+                        setColor(testColors[0], testColors[1], testColors[2], true);
+                        System.out.println("Currently testing: " + lowValue);
+                    }
+                }
+            }
+        }
+        System.out.println("Index is now: " + index + "Steps: " + steps);
+        System.out.println("Lowvalue " + lowValue + "Highvalue: " + highValue);
+    }*/}
     Boolean validArea()
     {
         if(areaBufferCheck[0] == 0 || areaBufferCheck[4] == 1)
@@ -563,7 +567,7 @@ public class MainActivity extends AppCompatActivity {
         return Math.random() < 0.5;
     }
 
-    int[] shuffledArray(int[] array)
+    int[] shuffledArray(@NonNull int[] array)
     {
         rand = new Random();
         for (int i = array.length - 1; i > 0; i--)
@@ -581,19 +585,39 @@ public class MainActivity extends AppCompatActivity {
         return array;
     }
 
-    void setColor(int RC1, int GC1, int BC1, int RC2, int GC2, int BC2)
-    {
+    void setColor(int RC1, int GC1, int BC1, int RC2, int GC2, int BC2) {
         // Left-Most Color (TARGET COLOR)
         circle1 = findViewById(R.id.circle1);
         Drawable background1 = circle1.getBackground();
-        background1.setColorFilter((Color.rgb(RC1, GC1, BC1)), PorterDuff.Mode.SRC_IN);
 
         // Right-Most Color (COMPARISON COLOR)
         circle2 = findViewById(R.id.circle2);
         Drawable background2 = circle2.getBackground();
-        background2.setColorFilter((Color.rgb(RC2, GC2, BC2)), PorterDuff.Mode.SRC_IN);
+
+        background1.setColorFilter(Color.rgb(25, 25, 25), PorterDuff.Mode.SRC_IN);
+        background2.setColorFilter(Color.rgb(25, 25, 25), PorterDuff.Mode.SRC_IN);
+        buttonActive = false;
+        new CountDownTimer(1000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+            }
+
+            public void onFinish() {
+                buttonActive = true;
+                // Swap colors randomly
+                if (fiftyFifty()) {
+                    background1.setColorFilter((Color.rgb(currentRGB[0], currentRGB[1], currentRGB[2])), PorterDuff.Mode.SRC_IN);
+                    background2.setColorFilter((Color.rgb(RC2, GC2, BC2)), PorterDuff.Mode.SRC_IN);
+                    System.out.println("Left color is standard");
+                } else {
+                    background1.setColorFilter((Color.rgb(RC2, GC2, BC2)), PorterDuff.Mode.SRC_IN);
+                    background2.setColorFilter((Color.rgb(currentRGB[0], currentRGB[1], currentRGB[2])), PorterDuff.Mode.SRC_IN);
+                    System.out.println("Right color is standard");
+                }
+            }
+        }.start();
     }
-    void setColor(int RC2, int GC2, int BC2, boolean shuffle)
+    void setColor(int RC2, int GC2, int BC2)
     {
         circle1 = findViewById(R.id.circle1);
         Drawable background1 = circle1.getBackground();
@@ -601,20 +625,73 @@ public class MainActivity extends AppCompatActivity {
         circle2 = findViewById(R.id.circle2);
         Drawable background2 = circle2.getBackground();
 
-        // Swap colors randomly
-        if(fiftyFifty() == true)
+        changeYCoordinate();
+        // Do not switch colors on the first pass
+        if (noSwitch == false)
         {
-            background1.setColorFilter((Color.rgb(currentRGB[0], currentRGB[1], currentRGB[2])), PorterDuff.Mode.SRC_IN);
-            background2.setColorFilter((Color.rgb(RC2, GC2, BC2)), PorterDuff.Mode.SRC_IN);
-            System.out.println("Left color is standard");
+            background1.setColorFilter(Color.rgb(25,25,25), PorterDuff.Mode.SRC_IN);
+            background2.setColorFilter(Color.rgb(25,25,25), PorterDuff.Mode.SRC_IN);
+            buttonActive = false;
+            new CountDownTimer(1000, 1000) {
+
+                public void onTick(long millisUntilFinished) {
+                }
+
+                public void onFinish() {
+                    buttonActive = true;
+                    // Swap colors randomly
+                    if(fiftyFifty())
+                    {
+                        background1.setColorFilter((Color.rgb(currentRGB[0], currentRGB[1], currentRGB[2])), PorterDuff.Mode.SRC_IN);
+                        background2.setColorFilter((Color.rgb(RC2, GC2, BC2)), PorterDuff.Mode.SRC_IN);
+                        System.out.println("Left color is standard");
+                    }
+                    else {
+                        background1.setColorFilter((Color.rgb(RC2, GC2, BC2)), PorterDuff.Mode.SRC_IN);
+                        background2.setColorFilter((Color.rgb(currentRGB[0], currentRGB[1], currentRGB[2])), PorterDuff.Mode.SRC_IN);
+                        System.out.println("Right color is standard");
+                    }
+                }
+            }.start();
         }
-        else {
-            background1.setColorFilter((Color.rgb(RC2, GC2, BC2)), PorterDuff.Mode.SRC_IN);
-            background2.setColorFilter((Color.rgb(currentRGB[0], currentRGB[1], currentRGB[2])), PorterDuff.Mode.SRC_IN);
-            System.out.println("Right color is standard");
+        else
+        {
+            noSwitch = false;
+            // Swap colors randomly
+            if(fiftyFifty())
+            {
+                background1.setColorFilter((Color.rgb(currentRGB[0], currentRGB[1], currentRGB[2])), PorterDuff.Mode.SRC_IN);
+                background2.setColorFilter((Color.rgb(RC2, GC2, BC2)), PorterDuff.Mode.SRC_IN);
+                System.out.println("Left color is standard");
+            }
+            else {
+                background1.setColorFilter((Color.rgb(RC2, GC2, BC2)), PorterDuff.Mode.SRC_IN);
+                background2.setColorFilter((Color.rgb(currentRGB[0], currentRGB[1], currentRGB[2])), PorterDuff.Mode.SRC_IN);
+                System.out.println("Right color is standard");
+            }
         }
+
     }
 
+    void changeYCoordinate()
+    {
+        int bufferInt =  (int)Math.floor(Math.random() * (220 - 140 + 1) + 140);
+        System.out.println("buffer int = " + bufferInt);
+        circle1 = findViewById(R.id.circle1);
+        circle2 = findViewById(R.id.circle2);
+
+        ViewGroup.LayoutParams params1 = circle1.getLayoutParams();
+        ViewGroup.LayoutParams params2 = circle2.getLayoutParams();
+
+        ConstraintLayout.LayoutParams  cParams1 = (ConstraintLayout.LayoutParams) params1;
+        ConstraintLayout.LayoutParams  cParams2 = (ConstraintLayout.LayoutParams) params2;
+
+        cParams1.topMargin = bufferInt;
+        cParams2.topMargin = bufferInt;
+
+        circle1.setLayoutParams(cParams1);
+        circle2.setLayoutParams(cParams2);
+    }
     float[] angleToCoordinates(float x_start, float y_start, float radius, int angle_degrees)
     {
         double x = radius * Math.sin(Math.PI * 2 * angle_degrees / 360);
@@ -630,16 +707,7 @@ public class MainActivity extends AppCompatActivity {
         //Toast.makeText(MainActivity.this, "THRESHOLD FOUND: " + ellipsePoint, Toast.LENGTH_SHORT).show();
         currentAngle += 45;
 
-        // Swap between adding 12 and 13 to the progress bar since it can't take 12.5 >:(
-        if(progressNudge)
-        {
-            progressBar.incrementProgressBy(13);
-        }
-        else
-        {
-            progressBar.incrementProgressBy(12);
-        }
-        progressNudge = !progressNudge;
+        progressBar.incrementProgressBy(6);
 
         if(currentAngle == 360)
         {
@@ -660,18 +728,8 @@ public class MainActivity extends AppCompatActivity {
     // nextAngle without argument is ONLY used for when there is an error in the answers
     void nextAngle()
     {
+        progressBar.incrementProgressBy(6);
         currentAngle += 45;
-
-        // Swap between adding 12 and 13 to the progress bar since it can't take 12.5 >:(
-        if(progressNudge)
-        {
-            progressBar.incrementProgressBy(13);
-        }
-        else
-        {
-            progressBar.incrementProgressBy(12);
-        }
-        progressNudge = !progressNudge;
 
         if(currentAngle == 360)
         {
@@ -690,37 +748,34 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void clearData()
+    public void saveDataError()
     {
-        {
-            String data = "";
-            FileOutputStream fos = null;
+        String data = "Data Invalid Error!\n";
+        FileOutputStream fos = null;
 
-            try {
-                fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
-                fos.write(data.getBytes());
+        try {
+            fos = openFileOutput(FILE_NAME, MODE_APPEND);
+            fos.write(data.getBytes());
 
-                System.out.println("Saved to " + getFilesDir() + "/" + FILE_NAME);
+            System.out.println("Saved to " + getFilesDir() + "/" + FILE_NAME);
 
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } finally {
-                if (fos != null)
-                {
-                    try {
-                        fos.close();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (fos != null)
+            {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
             }
         }
     }
     public void saveData(float value)
     {
-        String data = "Starting Points:\nx: " + x_start + "\ny: " + y_start + "\nAngle: " + currentAngle + "\nPoint: " + value + "\n";
+        float[] coors = angleToCoordinates(x_start, y_start, value, currentAngle);
+        String data = "Starting Points:\nx: " + x_start + "\ny: " + y_start + "\nAngle: " + currentAngle + "\nPoint: " + value + "\nCoordinate: " + coors[0] + ", " + coors[1] + "\n";
         FileOutputStream fos = null;
 
         try {
@@ -730,8 +785,6 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("Saved to " + getFilesDir() + "/" + FILE_NAME);
 
             //Toast.makeText(this, "Saved to " + getFilesDir() + "/" + FILE_NAME, Toast.LENGTH_LONG).show();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {

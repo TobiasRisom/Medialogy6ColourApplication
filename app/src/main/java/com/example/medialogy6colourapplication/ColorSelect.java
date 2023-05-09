@@ -13,18 +13,27 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 public class ColorSelect extends AppCompatActivity {
     Button[] buttonGroup = new Button[3];
     boolean[] buttonActive = {true, true, true};
     boolean firstTime = true;
 
-    float[][] YxyCoordinates = { {0.2f, 0.3f, 0.3f}, {0.2f, 0.4f, 0.4f}, {0.2f, 0.15f, 0.2f} };
+    Button clearButton;
+
+    private static final String FILE_NAME = "some_data.txt";
+
+    float[][] YxyCoordinates = { {0.2f, 0.3f, 0.3f}, {0.2f, 0.4f, 0.4f}, {0.2f, 0.35f, 0.42f} };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_color_select);
         buttonSetup();
+        clearButton = findViewById(R.id.clearData);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -95,6 +104,13 @@ public class ColorSelect extends AppCompatActivity {
                 {
                     Toast.makeText(ColorSelect.this, "Level already done!", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearData();
             }
         });
     }
@@ -198,6 +214,35 @@ public class ColorSelect extends AppCompatActivity {
             Drawable background = buttonGroup[i].getBackground();
             int[] colors = YxyTosRGB(YxyCoordinates[i][0], YxyCoordinates[i][1], YxyCoordinates[i][2]);
             background.setColorFilter((Color.rgb(colors[0], colors[1], colors[2])), PorterDuff.Mode.SRC_IN);
+        }
+    }
+
+    public void clearData()
+    {
+        {
+            String data = "";
+            FileOutputStream fos = null;
+
+            try {
+                fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
+                fos.write(data.getBytes());
+
+                System.out.println("Saved to " + getFilesDir() + "/" + FILE_NAME);
+
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } finally {
+                if (fos != null)
+                {
+                    try {
+                        fos.close();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
         }
     }
 }
