@@ -6,4 +6,45 @@
     android:layout_height="match_parent"
     tools:context=".ColorblindActivity">
 
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_launcher_foreground"
+        tools:layout_editor_absoluteX="139dp"
+        tools:layout_editor_absoluteY="262dp" />
+
+    <Button
+        android:id="@+id/button9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Answer1"
+        tools:layout_editor_absoluteX="152dp"
+        tools:layout_editor_absoluteY="447dp" />
+
+    <Button
+        android:id="@+id/button10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Answer2"
+        tools:layout_editor_absoluteX="152dp"
+        tools:layout_editor_absoluteY="517dp" />
+
+    <Button
+        android:id="@+id/button11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Answer3"
+        tools:layout_editor_absoluteX="152dp"
+        tools:layout_editor_absoluteY="575dp" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="345dp"
+        android:layout_height="112dp"
+        android:text="What number do you see here? \n\n Choose &quot;I don't see any number&quot; if you cannot make out a number."
+        android:textAlignment="center"
+        android:textSize="20sp"
+        tools:layout_editor_absoluteX="31dp"
+        tools:layout_editor_absoluteY="96dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

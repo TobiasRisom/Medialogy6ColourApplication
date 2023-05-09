@@ -12,6 +12,9 @@
         android:theme="@style/Theme.Medialogy6ColourApplication"
         tools:targetApi="31">
         <activity
+            android:name=".InstructionActivity"
+            android:exported="false" />
+        <activity
             android:name=".ColorblindExplanationActivity"
             android:exported="false" />
         <activity
