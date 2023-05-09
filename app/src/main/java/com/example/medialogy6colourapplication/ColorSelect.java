@@ -33,7 +33,6 @@ public class ColorSelect extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_color_select);
         buttonSetup();
-        clearButton = findViewById(R.id.clearData);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -104,13 +103,6 @@ public class ColorSelect extends AppCompatActivity {
                 {
                     Toast.makeText(ColorSelect.this, "Level already done!", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
-
-        clearButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clearData();
             }
         });
     }
@@ -214,35 +206,6 @@ public class ColorSelect extends AppCompatActivity {
             Drawable background = buttonGroup[i].getBackground();
             int[] colors = YxyTosRGB(YxyCoordinates[i][0], YxyCoordinates[i][1], YxyCoordinates[i][2]);
             background.setColorFilter((Color.rgb(colors[0], colors[1], colors[2])), PorterDuff.Mode.SRC_IN);
-        }
-    }
-
-    public void clearData()
-    {
-        {
-            String data = "";
-            FileOutputStream fos = null;
-
-            try {
-                fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
-                fos.write(data.getBytes());
-
-                System.out.println("Saved to " + getFilesDir() + "/" + FILE_NAME);
-
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } finally {
-                if (fos != null)
-                {
-                    try {
-                        fos.close();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            }
         }
     }
 }

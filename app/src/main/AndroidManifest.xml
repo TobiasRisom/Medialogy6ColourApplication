@@ -12,6 +12,9 @@
         android:theme="@style/Theme.Medialogy6ColourApplication"
         tools:targetApi="31">
         <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".InstructionActivity"
             android:exported="false" />
         <activity
@@ -24,13 +27,13 @@
             android:name=".InfoScreen"
             android:exported="false" />
         <activity
-            android:name=".TitleActivity"
+            android:name=".ColorSelect"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".ColorSelect"
+            android:name=".TitleActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

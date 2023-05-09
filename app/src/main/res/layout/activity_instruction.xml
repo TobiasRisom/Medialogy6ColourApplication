@@ -48,4 +48,12 @@
         android:textAlignment="center"
         tools:layout_editor_absoluteX="44dp"
         tools:layout_editor_absoluteY="299dp" />
+
+    <Button
+        android:id="@+id/ContinueButton"
+        android:layout_width="267dp"
+        android:layout_height="71dp"
+        android:text="I understand the instructions"
+        tools:layout_editor_absoluteX="72dp"
+        tools:layout_editor_absoluteY="480dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
