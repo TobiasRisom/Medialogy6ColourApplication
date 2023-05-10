@@ -7,7 +7,7 @@
     tools:context=".InstructionActivity">
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/TestImage1"
         android:layout_width="100dp"
         android:layout_height="100dp"
         app:srcCompat="@drawable/circle"
@@ -15,7 +15,7 @@
         tools:layout_editor_absoluteY="161dp" />
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/TestImage2"
         android:layout_width="100dp"
         android:layout_height="100dp"
         app:srcCompat="@drawable/circle2"

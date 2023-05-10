@@ -7,12 +7,12 @@
     tools:context=".TitleActivity">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/Logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
         android:layout_marginBottom="23dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintBottom_toTopOf="@+id/Welcome"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,7 +21,7 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/Welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Welcome!"
@@ -37,7 +37,7 @@
         android:text="Begin Test"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/Welcome"
         style="@style/StartButton" />
 
     <Button
