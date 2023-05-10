@@ -19,7 +19,7 @@
         android:id="@+id/textView8"
         android:layout_width="316dp"
         android:layout_height="85dp"
-        android:text="For the next screens, please answer what number you see in the cirlce. If you do not see any number, choose &quot;I don't see any number&quot;. If you already know you are colorblind, please specify below what type of colorblindness you have."
+        android:text="For the next screens, please answer what number you see in the cirlce. If you do not see any number, choose &quot;I don't see any number&quot;. If you already know you are colorblind, please specify below which type colorblind you are."
         tools:layout_editor_absoluteX="42dp"
         tools:layout_editor_absoluteY="219dp" />
 
@@ -32,19 +32,19 @@
         tools:layout_editor_absoluteY="341dp" />
 
     <Button
-        android:id="@+id/button7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="I am Red/Green colorblind"
-        tools:layout_editor_absoluteX="70dp"
-        tools:layout_editor_absoluteY="438dp" />
-
-    <Button
         android:id="@+id/button8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="I am Blue/Yellow colorblind"
-        tools:layout_editor_absoluteX="66dp"
-        tools:layout_editor_absoluteY="516dp" />
+        android:text="I am Red/Green or Blue/Yellow colorblind"
+        tools:layout_editor_absoluteX="45dp"
+        tools:layout_editor_absoluteY="465dp" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="I am complete colorblind (Cannot see any colors)"
+        tools:layout_editor_absoluteX="42dp"
+        tools:layout_editor_absoluteY="573dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
