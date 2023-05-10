@@ -8,34 +8,52 @@
 
     <TextView
         android:id="@+id/CBResults"
-        android:layout_width="301dp"
-        android:layout_height="53dp"
+        android:layout_width="319dp"
+        android:layout_height="68dp"
+        android:layout_marginTop="124dp"
         android:text="The test results indicate that you have normal color vision."
-        tools:layout_editor_absoluteX="55dp"
-        tools:layout_editor_absoluteY="184dp" />
+        android:textAlignment="center"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/Description"
-        android:layout_width="307dp"
-        android:layout_height="144dp"
-        android:text="If this result seems right to you, you can move on to the test by pressing &quot;Continue&quot; below. \n\nIf this result seems wrong to you, you can retake the colorblind test by pressing &quot;Redo Colorblind Test&quot;."
-        tools:layout_editor_absoluteX="55dp"
-        tools:layout_editor_absoluteY="298dp" />
+        android:layout_width="320dp"
+        android:layout_height="175dp"
+        android:layout_marginTop="16dp"
+        android:text="If this result seems right to you, you can move on to the test by pressing &quot;Continue&quot; below. \n\nIf this result seems wrong to you, you can retake the colorblind test by pressing &quot;Redo Test&quot;."
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/CBResults" />
 
     <Button
         android:id="@+id/moveOnButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
         android:text="Continue"
-        tools:layout_editor_absoluteX="158dp"
-        tools:layout_editor_absoluteY="525dp" />
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/RedoTestButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Description"
+        app:layout_constraintVertical_bias="0.384" />
 
     <Button
         android:id="@+id/RedoTestButton"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:text="Redo Colorblind Test"
-        tools:layout_editor_absoluteX="97dp"
-        tools:layout_editor_absoluteY="600dp" />
+        android:layout_marginBottom="184dp"
+        android:text="Redo Test"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
