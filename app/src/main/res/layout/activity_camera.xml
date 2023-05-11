@@ -32,12 +32,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.811" />
+        app:layout_constraintVertical_bias="0.941" />
 
     <ImageView
         android:id="@+id/overlayImage"
-        android:layout_width="164dp"
-        android:layout_height="214dp"
+        android:layout_width="180dp"
+        android:layout_height="250dp"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
