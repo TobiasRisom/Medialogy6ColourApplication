@@ -22,12 +22,12 @@ public class TitleActivity extends AppCompatActivity {
         settingsButton = findViewById(R.id.Settings);
 
         startButton.setOnClickListener(view -> {
-            Intent i = new Intent(TitleActivity.this, ColorblindActivity.class);
+            Intent i = new Intent(TitleActivity.this, ColorblindExplanationActivity.class);
             startActivity(i);
         });
 
         infoButton.setOnClickListener(view -> {
-            Intent i = new Intent(TitleActivity.this, ColorblindExplanationActivity.class);
+            Intent i = new Intent(TitleActivity.this, CameraActivity.class);
             startActivity(i);
         });
 
