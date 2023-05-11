@@ -76,8 +76,26 @@ public class ColorblindActivity extends AppCompatActivity {
                 break;
             default:
                 Intent i = new Intent(ColorblindActivity.this, ColorblindResultsActivity.class);
+                i.putExtra("result", calculateResult());
                 startActivity(i);
                 break;
         }
+    }
+
+    int calculateResult()
+    {
+        int results = 0; // Results: 0 = Normal Vision, 1 = Colorblind, 2 = Total Colorblindness
+        if(answers[0] != 1)
+        {
+            return 2;
+        }
+        for (int i = 0; i < 6; i++)
+            {
+                if(answers[i] != answerKey[i])
+                {
+                    results = 1;
+                }
+            }
+        return results;
     }
 }
