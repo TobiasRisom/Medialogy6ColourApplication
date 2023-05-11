@@ -27,7 +27,7 @@ public class TitleActivity extends AppCompatActivity {
         });
 
         infoButton.setOnClickListener(view -> {
-            Intent i = new Intent(TitleActivity.this, InfoScreen.class);
+            Intent i = new Intent(TitleActivity.this, CameraActivity.class);
             startActivity(i);
         });
 
