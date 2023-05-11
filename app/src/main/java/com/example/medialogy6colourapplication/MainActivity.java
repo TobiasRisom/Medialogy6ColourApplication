@@ -679,7 +679,7 @@ public class MainActivity extends AppCompatActivity {
 
     void changeYCoordinate()
     {
-        int bufferInt =  (int)Math.floor(Math.random() * (220 - 140 + 1) + 140);
+        int bufferInt =  (int)Math.floor(Math.random() * (270 - 190 + 1) + 190);
         System.out.println("buffer int = " + bufferInt);
         circle1 = findViewById(R.id.circle1);
         circle2 = findViewById(R.id.circle2);

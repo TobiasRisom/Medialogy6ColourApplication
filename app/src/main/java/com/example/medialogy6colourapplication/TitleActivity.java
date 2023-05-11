@@ -7,6 +7,7 @@ import android.icu.text.CaseMap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 public class TitleActivity extends AppCompatActivity {
 
@@ -20,14 +21,13 @@ public class TitleActivity extends AppCompatActivity {
         startButton = findViewById(R.id.StartButton);
         infoButton = findViewById(R.id.InfoButton);
         settingsButton = findViewById(R.id.Settings);
-
         startButton.setOnClickListener(view -> {
             Intent i = new Intent(TitleActivity.this, ColorblindExplanationActivity.class);
             startActivity(i);
         });
 
         infoButton.setOnClickListener(view -> {
-            Intent i = new Intent(TitleActivity.this, CameraActivity.class);
+            Intent i = new Intent(TitleActivity.this, InfoScreen.class);
             startActivity(i);
         });
 

@@ -28,8 +28,8 @@
 
     <TextView
         android:id="@+id/CBResults"
-        android:layout_width="319dp"
-        android:layout_height="68dp"
+        android:layout_width="316dp"
+        android:layout_height="94dp"
         android:layout_marginTop="124dp"
         android:text="The test results indicate that you have normal color vision."
         android:textAlignment="center"
@@ -51,29 +51,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/CBResults" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/moveOnButton"
-        android:layout_width="250dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="8dp"
-        android:text="Continue"
+        android:layout_width="258dp"
+        android:layout_height="104dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginBottom="61dp"
+        android:background="@drawable/continue_button"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/RedoTestButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Description"
-        app:layout_constraintVertical_bias="0.384" />
+        app:layout_constraintTop_toBottomOf="@+id/Description" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/RedoTestButton"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="184dp"
-        android:text="Redo Test"
+        android:layout_width="157dp"
+        android:layout_height="64dp"
+        android:layout_marginBottom="64dp"
+        android:background="@drawable/redo_test"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

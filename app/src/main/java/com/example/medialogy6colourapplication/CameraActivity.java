@@ -3,9 +3,11 @@ package com.example.medialogy6colourapplication;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.camera.core.Camera;
@@ -30,6 +32,8 @@ public class CameraActivity extends AppCompatActivity {
     PreviewView previewView;
     Camera camera;
 
+    Button button;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +41,7 @@ public class CameraActivity extends AppCompatActivity {
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
 
         previewView = findViewById(R.id.previewView);
+        button = findViewById(R.id.MoveOnCamera);
 
 
         cameraProviderFuture.addListener(() -> {
@@ -48,6 +53,11 @@ public class CameraActivity extends AppCompatActivity {
                 // This should never be reached.
             }
         }, ContextCompat.getMainExecutor(this));
+
+        button.setOnClickListener(view -> {
+            Intent i = new Intent(CameraActivity.this, InstructionActivity.class);
+            startActivity(i);
+        });
     }
 
     void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {

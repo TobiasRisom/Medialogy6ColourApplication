@@ -51,7 +51,7 @@ public class ColorblindResultsActivity extends AppCompatActivity {
         }
 
         continueButton.setOnClickListener(view -> {
-            Intent i = new Intent(ColorblindResultsActivity.this, ColorSelect.class);
+            Intent i = new Intent(ColorblindResultsActivity.this, CameraActivity.class);
             startActivity(i);
         });
 

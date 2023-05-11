@@ -18,21 +18,22 @@
         android:id="@+id/Explanation1"
         android:layout_width="271dp"
         android:layout_height="94dp"
-        android:layout_marginTop="128dp"
+        android:layout_marginBottom="16dp"
         android:text="We need to briefly assess your vision before you can begin, by giving you a brief colorblindness test."
         android:textAlignment="center"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/Explanation2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/Explanation2"
         android:layout_width="269dp"
         android:layout_height="173dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:text="For the next screens, please answer what number you see in the cirlce. If you do not see any number, choose &quot;I don't see any number&quot;. If you already know you are colorblind, please specify below which type colorblind you are."
         android:textAlignment="center"
         android:textSize="18sp"
@@ -40,25 +41,34 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/startButton"
-        android:layout_width="320dp"
-        android:layout_height="50dp"
-        android:text="Start the Colorblindness Test"
+        android:layout_width="245dp"
+        android:layout_height="81dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/start_colorblind_test"
         app:layout_constraintBottom_toTopOf="@+id/colorblindButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/fullCBButton"
-        android:layout_width="320dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="140dp"
-        android:text="I am complete colorblind (Cannot see any colors)"
+        android:layout_width="227dp"
+        android:layout_height="86dp"
+        android:layout_marginBottom="52dp"
+        android:background="@drawable/i_am_completely_colorblind"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/colorblindButton"
+        android:layout_width="227dp"
+        android:layout_height="86dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/i_am_colorblind"
+        app:layout_constraintBottom_toTopOf="@+id/fullCBButton"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
@@ -72,15 +82,5 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.024"
         app:srcCompat="@drawable/logo" />
-
-    <Button
-        android:id="@+id/colorblindButton"
-        android:layout_width="320dp"
-        android:layout_height="wrap_content"
-        android:text="I am Red/Green or Blue/Yellow colorblind"
-        app:layout_constraintBottom_toTopOf="@+id/fullCBButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

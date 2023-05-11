@@ -26,55 +26,54 @@
         app:layout_constraintVertical_bias="0.024"
         app:srcCompat="@drawable/logo" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/backButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="141dp"
+        android:layout_height="60dp"
         android:layout_marginBottom="96dp"
-        android:text="Back"
+        android:background="@drawable/back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/clearDataButton"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="124dp"
         android:text="Settings"
         android:textAlignment="center"
         android:textSize="48sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView14"
+        app:layout_constraintBottom_toTopOf="@+id/clearDataButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/clearDataButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Clear Data"
+        android:layout_width="220dp"
+        android:layout_height="87dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/clear_data"
         android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/textView14"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="339dp" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView14"
         android:layout_width="350dp"
         android:layout_height="48dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="172dp"
         android:text="Please do not clear data if you are testing the application."
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/clearDataButton"
+        app:layout_constraintBottom_toTopOf="@+id/backButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent" />

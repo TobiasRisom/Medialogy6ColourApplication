@@ -26,13 +26,13 @@ public class ColorblindExplanationActivity extends AppCompatActivity {
 
         colorblind.setOnClickListener(view -> {
             Intent i = new Intent(ColorblindExplanationActivity.this, ColorblindResultsActivity.class);
-            i.putExtra("result", 2);
+            i.putExtra("result", 1);
             startActivity(i);
         });
 
         fullCB.setOnClickListener(view -> {
             Intent i = new Intent(ColorblindExplanationActivity.this, ColorblindResultsActivity.class);
-            i.putExtra("result", 3);
+            i.putExtra("result", 2);
             startActivity(i);
         });
     }

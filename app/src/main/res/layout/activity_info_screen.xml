@@ -26,22 +26,24 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.923" />
+        app:layout_constraintVertical_bias="0.801" />
 
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="26dp"
         android:text="What am I doing to help?"
         android:textSize="20sp"
-        tools:layout_editor_absoluteX="95dp"
-        tools:layout_editor_absoluteY="371dp" />
+        app:layout_constraintBottom_toTopOf="@+id/textView6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="251dp"
         android:layout_height="138dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="28dp"
         android:text="This is a Citizen Science application developed to gather information about human color vision. By using this application you are helping cutting edge research on the limits of human color vision."
         android:textAlignment="center"
         android:textSize="16sp"
@@ -65,19 +67,21 @@
         android:id="@+id/textView6"
         android:layout_width="256dp"
         android:layout_height="99dp"
+        android:layout_marginBottom="44dp"
         android:text="By completing color tests you are actively participating in ongoing research on how humans perceive digital color, helping future development within this field."
         android:textAlignment="center"
         android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/Back"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="405dp" />
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/Back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="147dp"
+        android:layout_height="64dp"
         android:layout_marginBottom="112dp"
-        android:text="Back"
+        android:background="@drawable/back"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
