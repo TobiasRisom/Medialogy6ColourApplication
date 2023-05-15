@@ -14,7 +14,7 @@ import java.io.IOException;
 public class SettingsActivity extends AppCompatActivity {
 
     Button clearDataButton, backButton;
-    private static final String FILE_NAME = "some_data.txt";
+    private static final String FILE_NAME = "data.txt";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

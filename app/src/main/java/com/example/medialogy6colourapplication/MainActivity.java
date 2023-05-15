@@ -779,7 +779,7 @@ public class MainActivity extends AppCompatActivity {
     public void saveData(float value)
     {
         float[] coors = angleToCoordinates(x_start, y_start, value, currentAngle);
-        String data = "Starting Points:\nx: " + x_start + "\ny: " + y_start + "\nAngle: " + currentAngle + "\nPoint: " + value + "\nCoordinate: " + coors[0] + ", " + coors[1] + "\n";
+        String data = "Starting Points:\nx: " + x_start + "\ny: " + y_start + "\nAngle: " + currentAngle + "\nPoint: " + value + "\nx1: " + coors[0] + "\ny1: " + coors[1] + "\n";
         FileOutputStream fos = null;
 
         try {

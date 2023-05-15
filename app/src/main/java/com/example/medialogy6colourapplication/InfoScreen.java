@@ -19,7 +19,7 @@ public class InfoScreen extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(InfoScreen.this, TitleActivity.class);
+                Intent i = new Intent(InfoScreen.this, QuestionActivity.class);
                 startActivity(i);
             }
         });

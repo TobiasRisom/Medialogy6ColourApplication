@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#606070"
+    android:background="#40404A"
     tools:context=".MainActivity">
 
     <!-- add RadioGroup which contain the many RadioButton-->
@@ -39,25 +39,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button"
-        android:layout_width="338dp"
-        android:layout_height="78dp"
-        android:layout_marginTop="40dp"
-        android:backgroundTint="#878787"
-        android:text="SAME"
+        android:layout_width="280dp"
+        android:layout_height="95dp"
+        android:layout_marginTop="68dp"
+        android:background="@drawable/same_grey"
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button2"
-        android:layout_width="338dp"
-        android:layout_height="78dp"
-        android:backgroundTint="#707070"
-        android:text="DIFFERENT"
+        android:layout_width="280dp"
+        android:layout_height="95dp"
+        android:background="@drawable/different_grey"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/button3"
         app:layout_constraintEnd_toEndOf="parent"
@@ -65,17 +63,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button3"
-        android:layout_width="338dp"
-        android:layout_height="78dp"
-        android:layout_marginBottom="132dp"
-        android:backgroundTint="#656565"
-        android:text="Unsure"
+        android:layout_width="280dp"
+        android:layout_height="95dp"
+        android:layout_marginBottom="100dp"
+        android:background="@drawable/unsure_grey"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ProgressBar

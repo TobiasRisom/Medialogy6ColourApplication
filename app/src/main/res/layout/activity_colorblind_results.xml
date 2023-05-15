@@ -14,18 +14,6 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp" />
 
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="106dp"
-        android:layout_height="66dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.052"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.024"
-        app:srcCompat="@drawable/logo" />
-
     <TextView
         android:id="@+id/CBResults"
         android:layout_width="316dp"
@@ -53,25 +41,36 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/moveOnButton"
-        android:layout_width="258dp"
-        android:layout_height="104dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginBottom="61dp"
+        android:layout_width="249dp"
+        android:layout_height="81dp"
+        android:layout_marginTop="68dp"
         android:background="@drawable/continue_button"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/RedoTestButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Description" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/RedoTestButton"
-        android:layout_width="157dp"
-        android:layout_height="64dp"
-        android:layout_marginBottom="64dp"
+        android:layout_width="158dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="44dp"
         android:background="@drawable/redo_test"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/moveOnButton" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="106dp"
+        android:layout_height="66dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.024"
+        app:srcCompat="@drawable/logo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

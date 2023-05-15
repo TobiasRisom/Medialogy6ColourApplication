@@ -20,19 +20,20 @@ import java.io.IOException;
 public class ColorSelect extends AppCompatActivity {
     Button[] buttonGroup = new Button[3];
     boolean[] buttonActive = {true, true, true};
-    boolean firstTime = true;
 
-    Button clearButton;
+    Button goBack;
 
     private static final String FILE_NAME = "some_data.txt";
 
-    float[][] YxyCoordinates = { {0.2f, 0.3f, 0.3f}, {0.2f, 0.4f, 0.4f}, {0.2f, 0.35f, 0.42f} };
+    float[][] YxyCoordinates = { {0.2f, 0.4f, 0.4f}, {0.2f, 0.35f, 0.42f}, {0.2f, 0.3f, 0.3f} };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_color_select);
         buttonSetup();
+
+        goBack = findViewById(R.id.backToMain);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -103,6 +104,14 @@ public class ColorSelect extends AppCompatActivity {
                 {
                     Toast.makeText(ColorSelect.this, "Level already done!", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        goBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(ColorSelect.this, TitleActivity.class);
+                startActivity(i);
             }
         });
     }

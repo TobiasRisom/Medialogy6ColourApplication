@@ -14,11 +14,23 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="45dp" />
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/StartButton"
+        style="@style/StartButton"
+        android:layout_width="295dp"
+        android:layout_height="103dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="244dp"
+        android:background="@drawable/start_test"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <TextView
         android:id="@+id/Welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="44dp"
+        android:layout_marginBottom="48dp"
         android:text="Welcome!"
         android:textAlignment="center"
         android:textSize="60sp"
@@ -28,37 +40,14 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/StartButton"
-        style="@style/StartButton"
-        android:layout_width="295dp"
-        android:layout_height="103dp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/start_test"
-        app:layout_constraintBottom_toTopOf="@+id/InfoButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/InfoButton"
-        android:layout_width="199dp"
-        android:layout_height="69dp"
-        android:layout_marginBottom="140dp"
-        android:background="@drawable/info"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/Settings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:text="Settings"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="28dp"
+        android:background="@drawable/settings"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.887"
+        app:layout_constraintHorizontal_bias="0.943"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
@@ -69,7 +58,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.421"
+        app:layout_constraintVertical_bias="0.764"
         app:srcCompat="@drawable/logo_collipse" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
