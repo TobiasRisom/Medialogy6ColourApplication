@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Html;
+import android.text.Html; // HTML-styled text
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -13,8 +13,11 @@ import java.io.IOException;
 
 public class ColorblindResultsActivity extends AppCompatActivity {
 
+    // Views
     TextView resultText;
     Button continueButton, redoButton;
+
+    // Variables
     String source;
     int result = 1;
     private static final String FILE_NAME = "data.txt";
@@ -24,11 +27,13 @@ public class ColorblindResultsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_colorblind_results);
 
+        // Set up views
         resultText = findViewById(R.id.CBResults);
 
         continueButton = findViewById(R.id.moveOnButton);
         redoButton = findViewById(R.id.RedoTestButton);
 
+        // Get results data from the ColorblindActivity
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             result = extras.getInt("result");
@@ -36,21 +41,27 @@ public class ColorblindResultsActivity extends AppCompatActivity {
 
         switch(result)
         {
+            // Normal Color Vision
             case 0:
                 source = "The results of the test indicate that you have <b>normal color vision</b>.";
                 resultText.setText(Html.fromHtml(source));
                 saveData("None");
                 break;
+
+            // Some level of colorblindness
             case 1:
                 source = "The results of the test indicate that you are <b>some level of colorblind</b>.";
                 resultText.setText(Html.fromHtml(source));
                 saveData("Some Colorblindness");
                 break;
+
+            // Total Colorblindness
             case 2:
                 source = "The results of the test indicate that you suffer from <b>total colorblindness</b>.";
                 resultText.setText(Html.fromHtml(source));
                 saveData("Total Colorblindness");
                 break;
+            // Failsafe in case of errors
             default:
                 source = "An error happened. Please try the test again.";
                 resultText.setText(Html.fromHtml(source));
@@ -68,6 +79,7 @@ public class ColorblindResultsActivity extends AppCompatActivity {
         });
     }
 
+    // Same saveData function as found in MainActivity
     public void saveData(String result)
     {
         String data = "Colorblindness: " + result + "\n\n";
@@ -79,7 +91,6 @@ public class ColorblindResultsActivity extends AppCompatActivity {
 
             System.out.println("Saved to " + getFilesDir() + "/" + FILE_NAME);
 
-            //Toast.makeText(this, "Saved to " + getFilesDir() + "/" + FILE_NAME, Toast.LENGTH_LONG).show();
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {

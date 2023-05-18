@@ -1,5 +1,6 @@
 package com.example.medialogy6colourapplication;
 
+// NOTE: Every import is commented here - repeated uses in other activities is not
 // Various view-related imports
 import android.view.View;
 import android.view.ViewGroup;

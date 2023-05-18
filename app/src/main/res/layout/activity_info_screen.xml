@@ -61,13 +61,13 @@
         android:text="By completing color tests you are actively participating in ongoing research on how humans perceive digital color, helping future development within this field."
         android:textAlignment="center"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/Back"
+        app:layout_constraintBottom_toTopOf="@+id/InfoContinue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/Back"
+        android:id="@+id/InfoContinue"
         android:layout_width="156dp"
         android:layout_height="56dp"
         android:layout_marginBottom="96dp"

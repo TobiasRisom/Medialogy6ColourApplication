@@ -15,6 +15,8 @@ public class InstructionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_instruction);
+
+        // Set up the continue button
         continueButton = findViewById(R.id.ContinueButton);
 
         continueButton.setOnClickListener(new View.OnClickListener() {

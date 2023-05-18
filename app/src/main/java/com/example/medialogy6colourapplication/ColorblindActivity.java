@@ -9,8 +9,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class ColorblindActivity extends AppCompatActivity {
 
+    // Views
     Button answer1, answer2, answer3;
     ImageView plateDisplay;
+
+    // Answer key, user answers and current question
     int[] answerKey = {1,2,2,1,1,3};
     int[] answers = {0,0,0,0,0,0};
     int question = 1;
@@ -20,16 +23,19 @@ public class ColorblindActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_colorblind);
 
+        // Views
         answer1 = findViewById(R.id.answer1);
         answer2 = findViewById(R.id.answer2);
         answer3 = findViewById(R.id.answer3);
         plateDisplay = findViewById(R.id.ishiharaDisplay);
 
+        // Show the first plate and first round of answers
         plateDisplay.setImageResource(R.drawable.plate1);
         answer1.setText("12");
         answer2.setText("78");
         answer3.setText("I do not see a number");
 
+        // Button listeners
         answer1.setOnClickListener(view -> {
             updateQuestion(1);
         });
@@ -43,6 +49,7 @@ public class ColorblindActivity extends AppCompatActivity {
         });
     }
 
+    // updateQuestion - Updates the plate and answers, and moves on when the test is done
     void updateQuestion(int answer)
     {
         answers[question - 1] = answer;
@@ -82,15 +89,21 @@ public class ColorblindActivity extends AppCompatActivity {
         }
     }
 
+    // calculateResult - Calculates the result of the colorblind test
     int calculateResult()
     {
         int results = 0; // Results: 0 = Normal Vision, 1 = Colorblind, 2 = Total Colorblindness
+
+        // If the participant fails to see the first image, they might suffer from total colorblindness
         if(answers[0] != 1)
         {
             return 2;
         }
+
         for (int i = 0; i < 6; i++)
             {
+                // If any question is wrong, the participant might have some level of colorblindness
+                // Otherwise, they have normal color vision
                 if(answers[i] != answerKey[i])
                 {
                     results = 1;

@@ -14,8 +14,10 @@ public class InfoScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Set up the continue button
         setContentView(R.layout.activity_info_screen);
-        button =  findViewById(R.id.Back);
+        button =  findViewById(R.id.InfoContinue);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
