@@ -306,7 +306,7 @@ public class MainActivity extends AppCompatActivity {
         float X = (Y / y_coordinate) * x_coordinate;
         float Z = (Y / y_coordinate) * (1 - x_coordinate - y_coordinate);
 
-        // Conversation matrix
+        // Conversion matrix
         float[][] a ={{3.2404542f,-1.5371385f,-0.4985314f},
                 {-0.9692660f,1.8760108f,0.0415560f},
                 {0.0556434f,-0.2040259f,1.0572252f}};
