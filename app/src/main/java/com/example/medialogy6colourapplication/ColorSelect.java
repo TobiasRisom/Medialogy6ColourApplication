@@ -18,7 +18,7 @@ public class ColorSelect extends AppCompatActivity {
     Button goBack;
 
     boolean[] buttonActive = {true, true, true};  // Button states
-    float[][] YxyCoordinates = { {0.2f, 0.4f, 0.4f}, {0.2f, 0.35f, 0.42f}, {0.2f, 0.3f, 0.3f} }; // Test colours in Yxy-coordinates
+    float[][] yxYCoordinates = { {0.2f, 0.4f, 0.4f}, {0.2f, 0.35f, 0.42f}, {0.2f, 0.3f, 0.3f} }; // Test colours in Yxy-coordinates
     private static final String FILE_NAME = "some_data.txt";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +55,9 @@ public class ColorSelect extends AppCompatActivity {
 
                 // If button is active, go to MainActivity and test that colour
                 if(buttonActive[0] == true) {
-                    float[] Yxy = {YxyCoordinates[0][0], YxyCoordinates[0][1], YxyCoordinates[0][2]};
+                    float[] yxY = {yxYCoordinates[0][0], yxYCoordinates[0][1], yxYCoordinates[0][2]};
                     Intent i = new Intent(ColorSelect.this, MainActivity.class);
-                    i.putExtra("values", Yxy);
+                    i.putExtra("values", yxY);
                     i.putExtra("button", 0);
                     i.putExtra("array", buttonActive);
                     startActivity(i);
@@ -74,9 +74,9 @@ public class ColorSelect extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(buttonActive[1] == true) {
-                    float[] Yxy = {YxyCoordinates[1][0], YxyCoordinates[1][1], YxyCoordinates[1][2]};
+                    float[] yxY = {yxYCoordinates[1][0], yxYCoordinates[1][1], yxYCoordinates[1][2]};
                     Intent i = new Intent(ColorSelect.this, MainActivity.class);
-                    i.putExtra("values", Yxy);
+                    i.putExtra("values", yxY);
                     i.putExtra("button", 1);
                     i.putExtra("array", buttonActive);
                     startActivity(i);
@@ -92,9 +92,9 @@ public class ColorSelect extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(buttonActive[2] == true) {
-                float[] Yxy = {YxyCoordinates[2][0], YxyCoordinates[2][1], YxyCoordinates[2][2]};
+                float[] yxY = {yxYCoordinates[2][0], yxYCoordinates[2][1], yxYCoordinates[2][2]};
                 Intent i = new Intent(ColorSelect.this, MainActivity.class);
-                i.putExtra("values", Yxy);
+                i.putExtra("values", yxY);
                 i.putExtra("button", 2);
                 i.putExtra("array", buttonActive);
                 startActivity(i);
@@ -118,7 +118,7 @@ public class ColorSelect extends AppCompatActivity {
     }
 
     // Same converter as found in MainActivity
-    int[] YxyTosRGB(float Y, float x_coordinate, float y_coordinate){
+    int[] yxYTosRGB(float Y, float x_coordinate, float y_coordinate){
 
 
         float X = (Y / y_coordinate) * x_coordinate;
@@ -168,7 +168,7 @@ public class ColorSelect extends AppCompatActivity {
 
             // Set the buttons colour to match the test colour center
             Drawable background = buttonGroup[i].getBackground();
-            int[] colors = YxyTosRGB(YxyCoordinates[i][0], YxyCoordinates[i][1], YxyCoordinates[i][2]);
+            int[] colors = yxYTosRGB(yxYCoordinates[i][0], yxYCoordinates[i][1], yxYCoordinates[i][2]);
             background.setColorFilter((Color.rgb(colors[0], colors[1], colors[2])), PorterDuff.Mode.SRC_IN);
         }
     }

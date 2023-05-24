@@ -82,24 +82,24 @@ public class MainActivity extends AppCompatActivity {
         // Get data from the ColorSelect activity
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            float[] Yxy = extras.getFloatArray("values");
-            Y_start = Yxy[0];
-            x_start = Yxy[1];
-            y_start = Yxy[2];
+            float[] yxY = extras.getFloatArray("values");
+            Y_start = yxY[0];
+            x_start = yxY[1];
+            y_start = yxY[2];
             noFade = true;
 
             buttonID = extras.getInt("button");
             isCompleted = extras.getBooleanArray("array");
         }
 
-        // Convert the Yxy values of the color center to sRGB
+        // Convert the yxY values of the color center to sRGB
         float[] startingPoint = angleToCoordinates(x_start, y_start, 0, currentAngle);
-        int[] startingPointRGB = YxyTosRGB(Y_start, startingPoint[0], startingPoint[1]);
+        int[] startingPointRGB = yxYTosRGB(Y_start, startingPoint[0], startingPoint[1]);
         currentRGB = new int[]{startingPointRGB[0], startingPointRGB[1], startingPointRGB[2]};
 
         // Set the comparison color to the first interval test color
         float[] coordinates = angleToCoordinates(x_start, y_start, areaBuffer[areaCheckOrder[0]], currentAngle);
-        int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
+        int[] testColors = yxYTosRGB(Y_start, coordinates[0], coordinates[1]);
         setColour(testColors[0], testColors[1], testColors[2]);
 
         // Same Button
@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
                     // Set the comparison color to that point
                     precisionTestValue = roundToDecimal(highValue - ((highValue - lowValue) / 2f));
                     float[] coordinates = angleToCoordinates(x_start, y_start, precisionTestValue, currentAngle);
-                    int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
+                    int[] testColors = yxYTosRGB(Y_start, coordinates[0], coordinates[1]);
                     setColour(testColors[0], testColors[1], testColors[2]);
                 }
                 else
@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println("Answer not valid. Restarting...");
                         Arrays.fill(areaBufferCheck, 0);
                         float[] coordinates = angleToCoordinates(x_start, y_start, areaBuffer[areaCheckOrder[index]], currentAngle);
-                        int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
+                        int[] testColors = yxYTosRGB(Y_start, coordinates[0], coordinates[1]);
                         setColour(testColors[0], testColors[1], testColors[2]);
                     }
                 }
@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
             {
                 // If the initial test is not done yet, move on to the next interval
                 float[] coordinates = angleToCoordinates(x_start, y_start, areaBuffer[areaCheckOrder[index]], currentAngle);
-                int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
+                int[] testColors = yxYTosRGB(Y_start, coordinates[0], coordinates[1]);
                 setColour(testColors[0], testColors[1], testColors[2]);
                 System.out.println("Currently testing: " + areaBuffer[areaCheckOrder[index]]);
                 System.out.println("Current threshold values: " + areaBufferCheck[0] + ", " + areaBufferCheck[1] + ", " + areaBufferCheck[2] + ", " + areaBufferCheck[3] + ", " + areaBufferCheck[4] + ", ");
@@ -232,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Set the comparison colour to the low value
                 float[] coordinates = angleToCoordinates(x_start, y_start, lowValue, currentAngle);
-                int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
+                int[] testColors = yxYTosRGB(Y_start, coordinates[0], coordinates[1]);
                 setColour(testColors[0], testColors[1], testColors[2]);
                 split = false;
             }
@@ -261,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
                             lowValue = roundToDecimal(lowValue += 0.001f);
                             isLowValue = false;
                             float[] coordinates = angleToCoordinates(x_start, y_start, highValue, currentAngle);
-                            int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
+                            int[] testColors = yxYTosRGB(Y_start, coordinates[0], coordinates[1]);
                             setColour(testColors[0], testColors[1], testColors[2]);
                         }
 
@@ -281,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
                             highValue = roundToDecimal(highValue -= 0.001f);
                             isLowValue = true;
                             float[] coordinates = angleToCoordinates(x_start, y_start, lowValue, currentAngle);
-                            int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
+                            int[] testColors = yxYTosRGB(Y_start, coordinates[0], coordinates[1]);
                             setColour(testColors[0], testColors[1], testColors[2]);
                         }
                         // User says the low value is different - boundary point found!
@@ -299,8 +299,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // YxyTosRGB - Converts Yxy coordinates to sRGB values
-    int[] YxyTosRGB(float Y, float x_coordinate, float y_coordinate){
+    // yxYTosRGB - Converts yxY coordinates to sRGB values
+    int[] yxYTosRGB(float Y, float x_coordinate, float y_coordinate){
 
         // X and Z calculations
         float X = (Y / y_coordinate) * x_coordinate;
@@ -552,7 +552,7 @@ public class MainActivity extends AppCompatActivity {
         areaCheck = true;
         index = 0;
         float[] coordinates = angleToCoordinates(x_start, y_start, areaBuffer[areaCheckOrder[0]], currentAngle);
-        int[] testColors = YxyTosRGB(Y_start, coordinates[0], coordinates[1]);
+        int[] testColors = yxYTosRGB(Y_start, coordinates[0], coordinates[1]);
         setColour(testColors[0], testColors[1], testColors[2]);
 
     }
